@@ -6,28 +6,19 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validate.pipe';
 import { User } from 'src/common/decorators/user.decorator';
 import { JwtPayload } from 'src/types/jwt';
 import { UserType } from 'src/common/decorators/user-type.decorator';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('微信认证相关')
 @Controller('/wechat')
 export class WechatController {
   private readonly logger = new Logger(WechatController.name);
   constructor(private readonly wechatService: WechatService) {}
-  // 微信登录
+
   @Public()
+  @ApiOperation({summary:'微信登录'})
   @Get('/auth/login')
   async create(@Query('code') code: string) {
-    this.logger.log(`Received code: ${code}`); // 添加这行查看实际收到的 code
+    this.logger.log(`Received code: ${code}`);
     return await this.wechatService.loginByCode(code);
-  }
-  // 微信解密前端加密的手机号并绑定
-  @HttpCode(HttpStatus.OK)
-  @Post('/register/phone')
-  @UserType('onlyUnAuthedUser')
-  async registerByPhone(
-    @Body(new ZodValidationPipe(WeChatEncryptedDataSchema)) body: WechatEncryptedDataDto,
-    @User() user: JwtPayload,
-  ) {
-    this.logger.log(`Received body: ${JSON.stringify(body)}`); // 添加这行查看实际收到的 body
-    this.logger.log(`Received user: ${JSON.stringify(user)}`); // 添加这行查看实际收到的 user
-    return await this.wechatService.registerPhone(body, user.openid);
   }
 }

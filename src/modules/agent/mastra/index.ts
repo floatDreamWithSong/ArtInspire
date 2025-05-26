@@ -32,30 +32,31 @@ export class MastraService {
   }
 
   // RAG相关方法
-  async initializeRag() {
-    try {
-      this.logger.log('开始初始化RAG系统...');
+  // async initializeRag() {
+  //   try {
+  //     this.logger.log('开始初始化RAG系统...');
       
-      // 创建索引
-      await this.ragService.initRag();
+  //     // 创建索引
+  //     await this.ragService.initRag();
       
-      // 导入《柳林风声》故事内容
-      const { store } = await import('../constant/story');
-      await this.ragService.updateRagByText(store);
+  //     // 导入《柳林风声》故事内容
+  //     const { store } = await import('../constant/story');
+  //     await this.ragService.updateRagByText(store);
       
-      this.logger.log('RAG系统初始化完成');
-      return { 
-        success: true, 
-        message: 'RAG系统初始化成功，已导入《柳林风声》故事内容' 
-      };
-    } catch (error) {
-      this.logger.error('RAG初始化失败:', error);
-      return { 
-        success: false, 
-        message: `RAG初始化失败: ${error.message}` 
-      };
-    }
-  }
+  //     this.logger.log('RAG系统初始化完成');
+  //     return { 
+  //       success: true, 
+  //       message: 'RAG系统初始化成功，已导入《柳林风声》故事内容' 
+  //     };
+  //   } catch (error) {
+  //     this.logger.error('RAG初始化失败:', error);
+  //     const errorMessage = error instanceof Error ? error.message : String(error);
+  //     return { 
+  //       success: false, 
+  //       message: `RAG初始化失败: ${errorMessage}` 
+  //     };
+  //   }
+  // }
 
   async getRagStatus() {
     try {
@@ -68,9 +69,10 @@ export class MastraService {
         resultCount: testResults.length,
       };
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         status: 'error',
-        error: error.message,
+        error: errorMessage,
         lastTest: new Date().toISOString(),
       };
     }
@@ -92,8 +94,7 @@ export class MastraService {
     }
   }
 
-  async ragQueryTest() {
-    const testQuery = '河鼠和鼹鼠的友谊';
+  async ragQueryTest(testQuery : string) {
     const results = await this.ragService.textRagQuery(testQuery);
     return {
       query: testQuery,

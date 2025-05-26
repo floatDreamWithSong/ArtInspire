@@ -6,6 +6,7 @@ import { ModelService } from './mastra/model';
 import { RagService } from './mastra/rag';
 import { WindInWillowsAgentService } from './mastra/agents/wind-in-willows';
 import { ConfigurationService } from './mastra/config/configuration';
+import { AgentService } from './agent.service';
 
 @Module({
   imports: [ConfigModule],
@@ -16,6 +17,7 @@ import { ConfigurationService } from './mastra/config/configuration';
     RagService,
     WindInWillowsAgentService,
     ConfigurationService,
+    AgentService,
   ],
   exports: [MastraService],
 })
