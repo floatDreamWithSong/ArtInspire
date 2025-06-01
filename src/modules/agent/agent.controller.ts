@@ -18,6 +18,7 @@ import { AgentService } from './agent.service';
 import { UserType } from 'src/common/decorators/user-type.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import { JwtPayload } from 'src/types/jwt';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('智能体')
 @Controller('agent')
@@ -64,6 +65,30 @@ export class AgentController {
   async streamChat(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto, @User() user: JwtPayload) {
     const { message, character, threadId } = query;
     const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId, user.uid);
+    return new Observable((subscriber) => {
+      void stream.pipeTo(new WritableStream({
+        write(chunk: string) {
+          subscriber.next({
+            content: chunk,
+            timestamp: new Date()
+          });
+        },
+        close() {
+          subscriber.complete();
+        },
+        abort(err) {
+          subscriber.error(err);
+        }
+      }));
+    });
+  }
+
+  @Sse('chat/stream/visitor')
+  @ApiOperation({ summary: '(游客)与角色流式聊天' })
+  @Public()
+  async streamChatForVisitor(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto) {
+    const { message, character, threadId } = query;
+    const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId);
     return new Observable((subscriber) => {
       void stream.pipeTo(new WritableStream({
         write(chunk: string) {

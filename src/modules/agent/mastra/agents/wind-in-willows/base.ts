@@ -20,7 +20,7 @@ export class WindInWillowsAgent {
     this.modelService = _modelService
     this.ragService = _ragService
     this.configService = _configService
-    
+
     this.characters = charactersConfig
     this.initializeAgents();
   }
@@ -83,8 +83,9 @@ ${contextMaterial}
   public async streamChatWithCharacter(
     message: string,
     character: CharacterType,
-    threadId?: string,
-    userId?: string
+    threadId: string,
+    userId: string,
+    recordHistory: boolean = true
   ): Promise<ReadableStream> {
     const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
     // 使用agent的stream方法进行流式对话
@@ -97,13 +98,13 @@ ${contextMaterial}
     }], {
       threadId: threadId || `thread_${userId || 'anonymous'}_${character}`,
       resourceId: userId || 'anonymous',
-      memoryOptions: {
+      memoryOptions: recordHistory ? {
         lastMessages: 10,
         semanticRecall: {
           topK: 3,
           messageRange: 2,
         },
-      },
+      } : void 0,
     });
 
     return new ReadableStream({

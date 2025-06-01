@@ -1,8 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { WindInWillowsAgentService } from './agents/wind-in-willows';
+import { WindInWillowsAgentService, WindInWillowsAgentServiceForVisitor } from './agents/wind-in-willows';
 import { CharacterType } from 'unmerged-projects/agent-project/src/mastra/agents';
-import { RagService } from './rag';
-import { ModelService } from './model';
 
 @Injectable()
 export class MastraService {
@@ -10,8 +8,7 @@ export class MastraService {
 
   constructor(
     private windInWillowsService: WindInWillowsAgentService,
-    private ragService: RagService,
-    private modelService: ModelService,
+    private windInWillowsAgentServiceForVisitor: WindInWillowsAgentServiceForVisitor
   ) { }
 
   getAvailableCharacters() {
@@ -23,7 +20,10 @@ export class MastraService {
 
   async streamChatWithCharacter(message: string, character: CharacterType, threadId: string, userId?: number): Promise<ReadableStream> {
     this.logger.log(`流式聊天请求 - 角色: ${character}, 消息: ${message}， 会话id:${threadId} 用户：${userId}`);
-    return await this.windInWillowsService.streamChatWithCharacter(message, character, threadId, userId?.toString());
+    if (!userId) {
+      return await this.windInWillowsAgentServiceForVisitor.streamChatWithCharacter(message, character, threadId, 'visitor', false)
+    }
+    return await this.windInWillowsService.streamChatWithCharacter(message, character, threadId, userId.toString());
   }
 
   // 聊天历史管理方法
