@@ -218,7 +218,7 @@ ${contextMaterial}
   async getThreadMessages(
     threadId: string,
     userId: number,
-    limit: number,
+    limit?: number,
     searchQuery?: string
   ): Promise<{
     messages: any[];

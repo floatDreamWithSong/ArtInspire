@@ -61,7 +61,7 @@ export class MastraService {
   async getChatThreadMessages(
     threadId: string,
     userId: number,
-    limit: number,
+    limit?: number,
     searchQuery?: string
   ) {
     this.logger.log(`获取聊天消息记录 - 线程ID: ${threadId}, 用户${userId} 选项:${limit} ${searchQuery}`,);
