@@ -16,13 +16,14 @@ export class WindInWillowsAgent {
     private _modelService: ModelService,
     private _ragService: RagService,
     private _configService: ConfigurationService,
+    memory?: Memory
   ) {
     this.modelService = _modelService
     this.ragService = _ragService
     this.configService = _configService
 
     this.characters = charactersConfig
-    this.initializeAgents();
+    this.initializeAgents(memory);
   }
   protected initializeAgents(memory?: Memory) {
     Object.entries(this.characters).forEach(([type, config]) => {
@@ -96,8 +97,8 @@ ${contextMaterial}
       role: 'user',
       content: message
     }], {
-      threadId: threadId || `thread_${userId || 'anonymous'}_${character}`,
-      resourceId: userId || 'anonymous',
+      threadId: threadId,
+      resourceId: userId,
       memoryOptions: recordHistory ? {
         lastMessages: 10,
         semanticRecall: {

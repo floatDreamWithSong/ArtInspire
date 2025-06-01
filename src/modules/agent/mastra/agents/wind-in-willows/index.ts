@@ -18,17 +18,12 @@ export class WindInWillowsAgentService extends WindInWillowsAgent {
     protected ragService: RagService,
     protected configService: ConfigurationService,
   ) {
-    super(modelService, ragService, configService)
-    this.initializeMemory();
-  }
-
-  private initializeMemory() {
-    this.memory = new Memory({
+    const _memory = new Memory({
       storage: new PostgresStore({
-        connectionString: this.configService.pgVectorConfig.connectionString,
+        connectionString: configService.pgVectorConfig.connectionString,
       }),
       vector: new PgVector({
-        connectionString: this.configService.pgVectorConfig.connectionString,
+        connectionString: configService.pgVectorConfig.connectionString,
       }),
       embedder: fastembed,
       options: {
@@ -42,7 +37,10 @@ export class WindInWillowsAgentService extends WindInWillowsAgent {
         },
       },
     });
+    super(modelService, ragService, configService, _memory)
+    this.memory = _memory
   }
+
   private assertMemo() {
     if (!this.memory) {
       throw new Error('Memory 系统未初始化');
