@@ -75,7 +75,6 @@ export class WindInWillowsAgentService {
   ): Promise<{
     agent: Agent;
     enhancedPrompt: string;
-    characterConfig: CharacterConfig;
   }> {
     const agent = this.agents.get(character);
     if (!agent) {
@@ -94,40 +93,36 @@ export class WindInWillowsAgentService {
 【参考材料】
 ${contextMaterial}
 
-【孩子的问题】
-${message}
-
 请用${characterConfig.chineseName}的性格特点（${characterConfig.personality}）来回答，要温暖、有同理心，并且适合孩子理解。`;
 
     return {
       agent,
       enhancedPrompt,
-      characterConfig,
     };
   }
 
-  async chatWithCharacter(
-    message: string,
-    character: CharacterType,
-    threadId?: string,
-    userId?: string
-  ): Promise<string> {
-    const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
+  // async chatWithCharacter(
+  //   message: string,
+  //   character: CharacterType,
+  //   threadId?: string,
+  //   userId?: string
+  // ): Promise<string> {
+  //   const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
 
-    const response = await agent.generate(enhancedPrompt, {
-      threadId: threadId || `thread_${userId || 'anonymous'}_${character}`,
-      resourceId: userId || 'anonymous',
-      memoryOptions: {
-        lastMessages: 5,
-        semanticRecall: {
-          topK: 3,
-          messageRange: 2,
-        },
-      },
-    });
+  //   const response = await agent.generate(enhancedPrompt, {
+  //     threadId: threadId || `thread_${userId || 'anonymous'}_${character}`,
+  //     resourceId: userId || 'anonymous',
+  //     memoryOptions: {
+  //       lastMessages: 5,
+  //       semanticRecall: {
+  //         topK: 3,
+  //         messageRange: 2,
+  //       },
+  //     },
+  //   });
 
-    return response.text;
-  }
+  //   return response.text;
+  // }
 
   async streamChatWithCharacter(
     message: string,
@@ -136,13 +131,18 @@ ${message}
     userId?: string
   ): Promise<ReadableStream> {
     const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
-
     // 使用agent的stream方法进行流式对话
-    const stream = await agent.stream(enhancedPrompt, {
+    const stream = await agent.stream([{
+      role: 'system',
+      content: enhancedPrompt
+    }, {
+      role: 'user',
+      content: message
+    }], {
       threadId: threadId || `thread_${userId || 'anonymous'}_${character}`,
       resourceId: userId || 'anonymous',
       memoryOptions: {
-        lastMessages: 5,
+        lastMessages: 10,
         semanticRecall: {
           topK: 3,
           messageRange: 2,
@@ -164,11 +164,90 @@ ${message}
     });
   }
 
-  getCharacterInfo(character: CharacterType): CharacterConfig | null {
-    return this.characters[character] || null;
-  }
-
   getAllCharacters(): Record<CharacterType, CharacterConfig> {
     return this.characters;
+  }
+  private assertMemo() {
+    if (!this.memory) {
+      throw new Error('Memory 系统未初始化');
+    }
+  }
+
+  /**
+   * 获取用户的所有聊天线程
+   */
+  async getUserThreads(userId: number): Promise<Array<{
+    id: string;
+    resourceId: string;
+    title?: string;
+    createdAt: Date;
+    updatedAt: Date;
+    metadata?: Record<string, unknown>;
+  }>> {
+    if (!this.memory) {
+      throw new Error('Memory 系统未初始化');
+    }
+
+    const threads = await this.memory.getThreadsByResourceId({
+      resourceId: userId.toString(),
+    });
+
+    return threads;
+  }
+
+  /**
+   * 获取特定线程的信息(调试用)
+   */
+  async getThreadById(threadId: string): Promise<{
+    id: string;
+    resourceId: string;
+    title?: string;
+    createdAt: Date;
+    updatedAt: Date;
+    metadata?: Record<string, unknown>;
+  } | null> {
+    this.assertMemo()
+
+    const thread = await this.memory.getThreadById({ threadId });
+    return thread;
+  }
+
+  /**
+   * 获取线程中的聊天消息记录
+   */
+  async getThreadMessages(
+    threadId: string,
+    userId: number,
+    limit: number,
+    searchQuery?: string
+  ): Promise<{
+    messages: any[];
+    uiMessages: any[];
+  }> {
+    this.assertMemo()
+
+    const result = await this.memory.query(
+      {
+        resourceId: userId.toString(),
+        threadId,
+        selectBy: {
+          last: limit,
+          vectorSearchString: searchQuery,
+        },
+        threadConfig: searchQuery ? {
+          semanticRecall: {
+            topK: 3,
+            messageRange: 2,
+          },
+        } : void 0,
+      }
+    );
+    return result;
+  }
+
+  async deleteThread(threadId: string) {
+    this.assertMemo()
+    
+    await this.memory.deleteThread(threadId);
   }
 } 
