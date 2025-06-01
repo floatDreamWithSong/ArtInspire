@@ -12,10 +12,6 @@ export class ConfigurationService {
     };
   }
 
-  get AdminPassword() {
-    return this.configService.getOrThrow<string>('ADMIN_PASSWORD');
-  }
-
   get pgVectorConfig() {
     return {
       connectionString: this.configService.getOrThrow<string>('PG_VECTOR_CONNECTION_STRING'),
