@@ -39,7 +39,7 @@ export class WindInWillowsAgentService {
       options: {
         lastMessages: 10,
         semanticRecall: {
-          topK: 5,
+          topK: 3,
           messageRange: 3,
         },
         threads: {
@@ -66,18 +66,23 @@ export class WindInWillowsAgentService {
     });
   }
 
-  async chatWithCharacter(
-    message: string, 
-    character: CharacterType, 
-    threadId?: string,
-    userId?: string
-  ): Promise<string> {
+  /**
+   * 准备对话上下文，包括RAG检索和提示词构建
+   */
+  private async prepareConversationContext(
+    message: string,
+    character: CharacterType
+  ): Promise<{
+    agent: Agent;
+    enhancedPrompt: string;
+    characterConfig: CharacterConfig;
+  }> {
     const agent = this.agents.get(character);
     if (!agent) {
       throw new Error(`角色 ${character} 不存在`);
     }
 
-    // 先使用RAG搜索相关材料
+    // RAG搜索相关材料
     const ragResults = await this.ragService.textRagQuery(message);
     const contextMaterial = ragResults
       .map((result, index) => `参考材料${index + 1}: ${result.metadata?.text || ''}`)
@@ -93,6 +98,21 @@ ${contextMaterial}
 ${message}
 
 请用${characterConfig.chineseName}的性格特点（${characterConfig.personality}）来回答，要温暖、有同理心，并且适合孩子理解。`;
+
+    return {
+      agent,
+      enhancedPrompt,
+      characterConfig,
+    };
+  }
+
+  async chatWithCharacter(
+    message: string,
+    character: CharacterType,
+    threadId?: string,
+    userId?: string
+  ): Promise<string> {
+    const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
 
     const response = await agent.generate(enhancedPrompt, {
       threadId: threadId || `thread_${userId || 'anonymous'}_${character}`,
@@ -110,48 +130,31 @@ ${message}
   }
 
   async streamChatWithCharacter(
-    message: string, 
+    message: string,
     character: CharacterType,
     threadId?: string,
     userId?: string
   ): Promise<ReadableStream> {
-    const agent = this.agents.get(character);
-    if (!agent) {
-      throw new Error(`角色 ${character} 不存在`);
-    }
+    const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
 
-    // RAG搜索
-    const ragResults = await this.ragService.textRagQuery(message);
-    const contextMaterial = ragResults
-      .map((result, index) => `参考材料${index + 1}: ${result.metadata?.text || ''}`)
-      .join('\n\n');
-
-    const characterConfig = this.characters[character];
-    const enhancedPrompt = `作为${characterConfig.chineseName}（${characterConfig.name}），请基于以下材料回答孩子的问题：
-
-【参考材料】
-${contextMaterial}
-
-【孩子的问题】
-${message}
-
-请用${characterConfig.chineseName}的性格特点（${characterConfig.personality}）来回答，要温暖、有同理心，并且适合孩子理解。`;
-
-    // 使用模型直接生成流式响应
-    const model = this.modelService.getOpenAI()('qwen-turbo');
-    const result = await model.doStream({
-      inputFormat: 'prompt',
-      mode: { type: 'regular' },
-      prompt: [{ role: 'user', content: [{ type: 'text', text: enhancedPrompt }] }],
+    // 使用agent的stream方法进行流式对话
+    const stream = await agent.stream(enhancedPrompt, {
+      threadId: threadId || `thread_${userId || 'anonymous'}_${character}`,
+      resourceId: userId || 'anonymous',
+      memoryOptions: {
+        lastMessages: 5,
+        semanticRecall: {
+          topK: 3,
+          messageRange: 2,
+        },
+      },
     });
 
     return new ReadableStream({
       async start(controller) {
         try {
-          for await (const chunk of result.stream) {
-            if (chunk.type === 'text-delta') {
-              controller.enqueue(chunk.textDelta);
-            }
+          for await (const chunk of stream.textStream) {
+            controller.enqueue(chunk);
           }
           controller.close();
         } catch (error) {
@@ -167,9 +170,5 @@ ${message}
 
   getAllCharacters(): Record<CharacterType, CharacterConfig> {
     return this.characters;
-  }
-
-  getAgent(character: CharacterType): Agent | null {
-    return this.agents.get(character) || null;
   }
 } 
