@@ -145,11 +145,11 @@ export class AgentController {
   //   return this.mastraService.syncChat(message);
   // }
 
-  // @Get('test/rag/query')
-  // @UserType('onlyAdmin')
-  // @ApiOperation({ summary: '(测试用)RAG查询效果' })
-  // @ApiResponse({ status: 200, description: 'RAG查询测试结果' })
-  // async testRagQuery(@Query('text') text: string) {
-  //   return this.mastraService.ragQueryTest(text);
-  // }
+  @Get('rag')
+  @ApiOperation({ summary: '(测试用)RAG查询效果' })
+  @ApiResponse({ status: 200, description: 'RAG查询测试结果' })
+  @Public()
+  async testRagQuery(@Query('text') text: string) {
+    return this.mastraService.ragQueryTest(text);
+  }
 } 

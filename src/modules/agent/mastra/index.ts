@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { WindInWillowsAgentService, WindInWillowsAgentServiceForVisitor } from './agents/wind-in-willows';
 import { CharacterType } from 'unmerged-projects/agent-project/src/mastra/agents';
+import { RagService } from './rag';
 
 @Injectable()
 export class MastraService {
@@ -8,7 +9,8 @@ export class MastraService {
 
   constructor(
     private windInWillowsService: WindInWillowsAgentService,
-    private windInWillowsAgentServiceForVisitor: WindInWillowsAgentServiceForVisitor
+    private windInWillowsAgentServiceForVisitor: WindInWillowsAgentServiceForVisitor,
+    private ragService: RagService,
   ) { }
 
   getAvailableCharacters() {
@@ -152,13 +154,13 @@ export class MastraService {
   //   }
   // }
 
-  // async ragQueryTest(testQuery: string) {
-  //   const results = await this.ragService.textRagQuery(testQuery);
-  //   return {
-  //     query: testQuery,
-  //     results: results,
-  //     count: results.length,
-  //   };
-  // }
+  async ragQueryTest(testQuery: string) {
+    const results = await this.ragService.textRagQuery(testQuery);
+    return {
+      query: testQuery,
+      results: results,
+      count: results.length,
+    };
+  }
 
 } 
