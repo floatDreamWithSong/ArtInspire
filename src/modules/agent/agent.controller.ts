@@ -142,9 +142,9 @@ export class AgentController {
   @ApiOperation({ summary: '获取线程中的消息记录' })
   @ApiResponse({ status: 200, description: '消息记录', type: ThreadMessagesResponseDto })
   async getThreadMessages(@Query(new ZodValidationPipe(GetThreadMessagesQuerySchema)) query: GetThreadMessagesQueryDto, @User() user: JwtPayload): Promise<ThreadMessagesResponseDto> {
-    const { character, limit, searchQuery } = query;
+    const { character, limit, searchQuery, beforeId } = query;
     const threadId = this.createThreadId(user, character)
-    return await this.mastraService.getChatThreadMessages(threadId, user.uid, limit, searchQuery);
+    return await this.mastraService.getChatThreadMessages(threadId, user.uid, limit, searchQuery, beforeId);
   }
 
   @Get('rag')

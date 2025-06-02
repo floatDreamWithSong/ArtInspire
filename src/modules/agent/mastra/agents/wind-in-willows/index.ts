@@ -93,13 +93,34 @@ export class WindInWillowsAgentService extends WindInWillowsAgent {
     threadId: string,
     userId: number,
     limit?: number,
-    searchQuery?: string
+    searchQuery?: string,
+    beforeId?: string  // 获取指定消息ID之前的消息，用于分页
   ): Promise<{
     messages: any[];
     uiMessages: any[];
   }> {
     this.assertMemo()
 
+    // 如果有 beforeId，使用 include 参数获取该消息之前的内容
+    if (beforeId && !searchQuery) {
+      console.log(beforeId, searchQuery)
+      const result = await this.memory.query({
+        resourceId: userId.toString(),
+        threadId,
+        selectBy: {
+          last: 0,
+          include: [{
+            id: beforeId,
+            withPreviousMessages: limit || 20,  // 获取该消息之前的消息
+            withNextMessages: 0  // 不包含后续消息
+          }],
+        },
+      });
+      
+      return result;
+    }
+
+    // 原有的查询逻辑
     const result = await this.memory.query(
       {
         resourceId: userId.toString(),

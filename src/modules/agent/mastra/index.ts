@@ -64,11 +64,12 @@ export class MastraService {
     threadId: string,
     userId: number,
     limit?: number,
-    searchQuery?: string
+    searchQuery?: string,
+    beforeId?: string
   ) {
-    this.logger.log(`获取聊天消息记录 - 线程ID: ${threadId}, 用户${userId} 选项:${limit} ${searchQuery}`,);
+    this.logger.log(`获取聊天消息记录 - 线程ID: ${threadId}, 用户${userId} 选项:${limit} ${searchQuery} beforeId:${beforeId}`,);
     try {
-      const result = await this.windInWillowsService.getThreadMessages(threadId, userId, limit, searchQuery);
+      const result = await this.windInWillowsService.getThreadMessages(threadId, userId, limit, searchQuery, beforeId);
       return {
         success: true,
         messages: result.uiMessages.filter(i => i.role === 'user' || i.role === 'assistant'),

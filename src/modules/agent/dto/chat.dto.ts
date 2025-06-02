@@ -16,8 +16,9 @@ export type ChatRequestDto = z.infer<typeof ChatRequestSchema>;
 
 export const GetThreadMessagesQuerySchema = z.object({
   character: characterSchema,
-  limit: z.coerce.number().max(50).optional(),
+  limit: z.coerce.number().max(100).optional(),
   searchQuery: z.string().optional(),
+  beforeId: z.string().optional(),
 });
 export type GetThreadMessagesQueryDto = z.infer<typeof GetThreadMessagesQuerySchema>
 
