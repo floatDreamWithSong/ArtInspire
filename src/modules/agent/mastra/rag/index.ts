@@ -35,7 +35,7 @@ export class RagService {
       indexName: this.indexName,
       queryVector: embedding,
       topK: 4,
-      minScore: 0.75,
+      minScore: 0.5,
     });
     this.logger.log("查询结果");
     this.logger.log(result)
