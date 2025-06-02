@@ -17,17 +17,12 @@ import { CustomThrottlerGuard } from './guards/custom-throttler.guard';
     // 仅为agent模块配置限流
     ThrottlerModule.forRoot([
       {
-        name: 'short',
-        ttl: 1000, // 1秒
-        limit: 3,  // 1秒内最多3次请求
+        name: 'burst',
+        ttl: 1000,  // 1秒
+        limit: 5,   // 1秒内最多5次请求
       },
       {
-        name: 'medium', 
-        ttl: 10000, // 10秒
-        limit: 20,  // 10秒内最多20次请求
-      },
-      {
-        name: 'long',
+        name: 'sustained',
         ttl: 60000, // 1分钟
         limit: 100, // 1分钟内最多100次请求
       }

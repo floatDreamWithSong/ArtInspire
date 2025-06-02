@@ -45,7 +45,6 @@ export class AgentController {
   @Get('characters')
   @ApiOperation({ summary: '获取可用角色列表' })
   @ApiResponse({ status: 200, description: '角色列表' })
-  @Throttle({ default: { limit: 20, ttl: 60000 } })
   getCharacters() {
     return this.mastraService.getAvailableCharacters();
   }
@@ -65,7 +64,7 @@ export class AgentController {
 
   @Sse('chat/stream')
   @ApiOperation({ summary: '与角色流式聊天' })
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Throttle({ burst: { limit: 10, ttl: 60000 } })
   async streamChat(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto, @User() user: JwtPayload) {
     const { message, character, threadId } = query;
     const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId, user.uid);
@@ -90,7 +89,7 @@ export class AgentController {
   @Sse('chat/stream/visitor')
   @ApiOperation({ summary: '(游客)与角色流式聊天' })
   @Public()
-  @Throttle({ default: { limit: 2, ttl: 60000 } })
+  @Throttle({ burst: { limit: 4, ttl: 60000, } })
   async streamChatForVisitor(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto) {
     const { message, character, threadId } = query;
     const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId);
@@ -117,7 +116,6 @@ export class AgentController {
   @Get('threads')
   @ApiOperation({ summary: '获取用户的聊天线程列表' })
   @ApiResponse({ status: 200, description: '线程列表', type: ThreadsResponseDto })
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
   async getUserThreads(@User() user: JwtPayload): Promise<ThreadsResponseDto> {
     const { uid: userId } = user;
     return await this.mastraService.getUserChatThreads(userId);
@@ -126,7 +124,6 @@ export class AgentController {
   @Get('threads/:threadId')
   @ApiOperation({ summary: '获取特定线程的详细信息' })
   @ApiResponse({ status: 200, description: '线程详情', type: ThreadResponseDto })
-  @Throttle({ default: { limit: 10, ttl: 60000 } })
   async getThreadById(@Param(new ZodValidationPipe(GetThreadByIdQuerySchema)) query: GetThreadByIdQueryDto): Promise<ThreadResponseDto> {
     const { threadId } = query;
     return await this.mastraService.getChatThreadById(threadId);
@@ -135,7 +132,6 @@ export class AgentController {
   @Get('thread/messages')
   @ApiOperation({ summary: '获取线程中的消息记录' })
   @ApiResponse({ status: 200, description: '消息记录', type: ThreadMessagesResponseDto })
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   async getThreadMessages(@Query(new ZodValidationPipe(GetThreadMessagesQuerySchema)) query: GetThreadMessagesQueryDto, @User() user: JwtPayload): Promise<ThreadMessagesResponseDto> {
     const { threadId,  limit, searchQuery } = query;
     return await this.mastraService.getChatThreadMessages(threadId, user.uid, limit, searchQuery);
