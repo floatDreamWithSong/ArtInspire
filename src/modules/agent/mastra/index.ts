@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { WindInWillowsAgentService, WindInWillowsAgentServiceForVisitor } from './agents/wind-in-willows';
-import { CharacterType } from 'unmerged-projects/agent-project/src/mastra/agents';
 import { RagService } from './rag';
+import { CharacterType } from '../constant/character';
 
 @Injectable()
 export class MastraService {

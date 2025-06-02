@@ -1,5 +1,4 @@
-import { charactersConfig } from "src/modules/agent/constant/character";
-import { CharacterType, CharacterConfig } from "unmerged-projects/agent-project/src/mastra/agents";
+import { CharacterConfig, charactersConfig, CharacterType } from "src/modules/agent/constant/character";
 import { ConfigurationService } from "../../config/configuration";
 import { ModelService } from "../../model";
 import { RagService } from "../../rag";
