@@ -30,10 +30,10 @@ export class WindInWillowsAgentService extends WindInWillowsAgent {
         lastMessages: 10,
         semanticRecall: {
           topK: 3,
-          messageRange: 3,
+          messageRange: 4,
         },
         threads: {
-          generateTitle: true,
+          generateTitle: false,
         },
       },
     });

@@ -33,7 +33,7 @@ export class WindInWillowsAgent {
 你需要基于提供的相关信息来回答问题，但要用你的角色性格来表达。
 如果材料中没有相关信息，请诚实说明，但仍然用你的角色特点来安慰和支持孩子。
 你的主要任务是帮助和安慰有心理问题的小朋友，用温暖、理解和智慧来回应他们。`,
-        model: this.modelService.getOpenAI()('qwen-turbo'),
+        model: this.modelService.getOpenAI()('deepseek-v3'),
         memory,
       });
 
@@ -68,7 +68,14 @@ export class WindInWillowsAgent {
 【参考材料】
 ${contextMaterial}
 
-请用${characterConfig.chineseName}的性格特点（${characterConfig.personality}）来回答，要温暖、有同理心，并且适合孩子理解。`;
+请用${characterConfig.chineseName}的性格特点（${characterConfig.personality}）来回答，要温暖、有同理心，并且适合孩子理解。
+${
+  process.env.NODE_ENV === 'development' ? `
+  【调试】
+  如果上下文包含以前的对话上下文，请在结尾时输出已经召回的对话上下文的数量。例如(召回上下文：user:3,assistant:5)，如果没有，则输出（无召回上下文）
+  ` : ''
+}
+`;
 
     return {
       agent,
@@ -85,9 +92,10 @@ ${contextMaterial}
     character: CharacterType,
     threadId: string,
     userId: string,
-    recordHistory: boolean = true
+    recordHistory: boolean = true,
   ): Promise<ReadableStream> {
     const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
+    console.log(recordHistory)
     // 使用agent的stream方法进行流式对话
     const stream = await agent.stream([{
       role: 'system',

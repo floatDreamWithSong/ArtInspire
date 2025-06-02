@@ -4,12 +4,8 @@ import { Observable } from 'rxjs';
 import {
   ChatRequestDto,
   ChatRequestSchema,
-  GetThreadByIdQueryDto,
-  GetThreadByIdQuerySchema,
   GetThreadMessagesQueryDto,
   GetThreadMessagesQuerySchema,
-  ThreadsResponseDto,
-  ThreadResponseDto,
   ThreadMessagesResponseDto,
 } from './dto/chat.dto';
 import { ZodValidationPipe } from '../../common/pipes/zod-validate.pipe';
@@ -41,7 +37,7 @@ export class AgentController {
       service: 'ArtInspire Wind in the Willows Agent'
     };
   }
-  
+
   @Get('characters')
   @ApiOperation({ summary: '获取可用角色列表' })
   @ApiResponse({ status: 200, description: '角色列表' })
@@ -61,12 +57,16 @@ export class AgentController {
   //     timestamp: new Date().toISOString()
   //   };
   // }
+  private createThreadId(user: JwtPayload, character: string) {
+    return `user${user.uid}_${character}`
+  }
 
   @Sse('chat/stream')
   @ApiOperation({ summary: '与角色流式聊天' })
   @Throttle({ burst: { limit: 10, ttl: 60000 } })
   async streamChat(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto, @User() user: JwtPayload) {
-    const { message, character, threadId } = query;
+    const { message, character } = query;
+    const threadId = this.createThreadId(user, character)
     const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId, user.uid);
     return new Observable((subscriber) => {
       void stream.pipeTo(new WritableStream({
@@ -91,7 +91,8 @@ export class AgentController {
   @Public()
   @Throttle({ burst: { limit: 4, ttl: 60000, } })
   async streamChatForVisitor(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto) {
-    const { message, character, threadId } = query;
+    const { message, character } = query;
+    const threadId = 'visitor'
     const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId);
     return new Observable((subscriber) => {
       void stream.pipeTo(new WritableStream({
@@ -113,37 +114,38 @@ export class AgentController {
 
 
   // 聊天历史管理接口
-  @Get('threads')
-  @ApiOperation({ summary: '获取用户的聊天线程列表' })
-  @ApiResponse({ status: 200, description: '线程列表', type: ThreadsResponseDto })
-  async getUserThreads(@User() user: JwtPayload): Promise<ThreadsResponseDto> {
-    const { uid: userId } = user;
-    return await this.mastraService.getUserChatThreads(userId);
-  }
+  // @Get('threads')
+  // @ApiOperation({ summary: '获取用户的聊天线程列表' })
+  // @ApiResponse({ status: 200, description: '线程列表', type: ThreadsResponseDto })
+  // async getUserThreads(@User() user: JwtPayload): Promise<ThreadsResponseDto> {
+  //   const { uid: userId } = user;
+  //   return await this.mastraService.getUserChatThreads(userId);
+  // }
 
-  @Get('threads/:threadId')
-  @ApiOperation({ summary: '获取特定线程的详细信息' })
-  @ApiResponse({ status: 200, description: '线程详情', type: ThreadResponseDto })
-  async getThreadById(@Param(new ZodValidationPipe(GetThreadByIdQuerySchema)) query: GetThreadByIdQueryDto): Promise<ThreadResponseDto> {
-    const { threadId } = query;
-    return await this.mastraService.getChatThreadById(threadId);
-  }
+  // @Get('threads/:threadId')
+  // @ApiOperation({ summary: '获取特定线程的详细信息' })
+  // @ApiResponse({ status: 200, description: '线程详情', type: ThreadResponseDto })
+  // async getThreadById(@Param(new ZodValidationPipe(GetThreadByIdQuerySchema)) query: GetThreadByIdQueryDto): Promise<ThreadResponseDto> {
+  //   const { threadId } = query;
+  //   return await this.mastraService.getChatThreadById(threadId);
+  // }
+
+  // @Delete('threads/:threadId')
+  // @ApiOperation({ summary: '获取特定线程的详细信息' })
+  // @ApiResponse({ status: 200, description: '线程详情', type: ThreadResponseDto })
+  // async deleteThreadById(@Param(new ZodValidationPipe(GetThreadByIdQuerySchema)) query: GetThreadByIdQueryDto) {
+  //   const { threadId } = query;
+  //   return await this.mastraService.deleteChatThread(threadId);
+  // }
 
   @Get('thread/messages')
   @ApiOperation({ summary: '获取线程中的消息记录' })
   @ApiResponse({ status: 200, description: '消息记录', type: ThreadMessagesResponseDto })
   async getThreadMessages(@Query(new ZodValidationPipe(GetThreadMessagesQuerySchema)) query: GetThreadMessagesQueryDto, @User() user: JwtPayload): Promise<ThreadMessagesResponseDto> {
-    const { threadId,  limit, searchQuery } = query;
+    const { character, limit, searchQuery } = query;
+    const threadId = this.createThreadId(user, character)
     return await this.mastraService.getChatThreadMessages(threadId, user.uid, limit, searchQuery);
   }
-
-  // @Get('test/chat')
-  // @UserType('beyondVisitor')
-  // @ApiOperation({ summary: '(测试用)对话', })
-  // @ApiResponse({ status: 200, description: '对话测试结果' })
-  // async testChat(@Query('message') message: string) {
-  //   return this.mastraService.syncChat(message);
-  // }
 
   @Get('rag')
   @ApiOperation({ summary: '(测试用)RAG查询效果' })
@@ -152,4 +154,5 @@ export class AgentController {
   async testRagQuery(@Query('text') text: string) {
     return this.mastraService.ragQueryTest(text);
   }
+
 } 

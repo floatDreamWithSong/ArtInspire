@@ -1,22 +1,21 @@
 import { z } from 'zod';
 import { ApiProperty } from '@nestjs/swagger';
 
-const threadIdSchema =  z.string().min(1, '线程ID不能为空')
+const characterSchema = z.enum(['rat', 'badger', 'toad', 'mole'])
 
 export const ChatRequestSchema = z.object({
   message: z.string().min(1, '消息不能为空').max(800,'单次对话不能过长'),
-  character: z.enum(['rat', 'badger', 'toad', 'mole']).optional().default('rat'),
-  threadId: threadIdSchema
+  character: characterSchema,
 });
 export type ChatRequestDto = z.infer<typeof ChatRequestSchema>;
 
-export const GetThreadByIdQuerySchema = z.object({
-  threadId: threadIdSchema,
-});
-export type GetThreadByIdQueryDto = z.infer<typeof GetThreadByIdQuerySchema>
+// export const GetThreadByIdQuerySchema = z.object({
+//   threadId: threadIdSchema,
+// });
+// export type GetThreadByIdQueryDto = z.infer<typeof GetThreadByIdQuerySchema>
 
 export const GetThreadMessagesQuerySchema = z.object({
-  threadId: threadIdSchema,
+  character: characterSchema,
   limit: z.coerce.number().max(50).optional(),
   searchQuery: z.string().optional(),
 });
