@@ -28,7 +28,7 @@ importers:
         version: 0.3.4(openapi-types@12.1.3)(react@19.1.0)
       '@mastra/pg':
         specifier: ^0.3.4
-        version: 0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.16.0))(react@19.1.0)(zod@3.24.3)
+        version: 0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.14.1))(react@19.1.0)(zod@3.24.3)
       '@mastra/rag':
         specifier: ^0.1.23
         version: 0.1.23(ai@4.3.16(react@19.1.0)(zod@3.24.3))(openapi-types@12.1.3)(react@19.1.0)
@@ -59,6 +59,9 @@ importers:
       '@nestjs/swagger':
         specifier: ^11.1.5
         version: 11.1.5(@nestjs/common@11.1.0(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.0)(reflect-metadata@0.2.2)
+      '@nestjs/throttler':
+        specifier: ^6.4.0
+        version: 6.4.0(@nestjs/common@11.1.0(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.0)(reflect-metadata@0.2.2)
       '@prisma/client':
         specifier: ^6.6.0
         version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
@@ -1548,6 +1551,13 @@ packages:
         optional: true
       '@nestjs/platform-express':
         optional: true
+
+  '@nestjs/throttler@6.4.0':
+    resolution: {integrity: sha512-osL67i0PUuwU5nqSuJjtUJZMkxAnYB4VldgYUMGzvYRJDCqGRFMWbsbzm/CkUtPLRL30I8T74Xgt/OQxnYokiA==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+      '@nestjs/core': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+      reflect-metadata: ^0.1.13 || ^0.2.0
 
   '@noble/hashes@1.8.0':
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
@@ -7683,12 +7693,12 @@ snapshots:
       - valibot
       - zod-openapi
 
-  '@mastra/pg@0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.16.0))(react@19.1.0)(zod@3.24.3)':
+  '@mastra/pg@0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.14.1))(react@19.1.0)(zod@3.24.3)':
     dependencies:
       '@mastra/core': 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@3.24.3)
       async-mutex: 0.5.0
       pg: 8.16.0
-      pg-promise: 11.13.0(pg-query-stream@4.8.1(pg@8.16.0))
+      pg-promise: 11.13.0(pg-query-stream@4.8.1(pg@8.14.1))
       xxhash-wasm: 1.1.0
     transitivePeerDependencies:
       - '@hono/arktype-validator'
@@ -7981,6 +7991,12 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@nestjs/platform-express': 11.1.0(@nestjs/common@11.1.0(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.0)
+
+  '@nestjs/throttler@6.4.0(@nestjs/common@11.1.0(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.0)(reflect-metadata@0.2.2)':
+    dependencies:
+      '@nestjs/common': 11.1.0(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core': 11.1.0(@nestjs/common@11.1.0(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      reflect-metadata: 0.2.2
 
   '@noble/hashes@1.8.0': {}
 
@@ -12090,9 +12106,9 @@ snapshots:
 
   pg-connection-string@2.9.0: {}
 
-  pg-cursor@2.15.0(pg@8.16.0):
+  pg-cursor@2.15.0(pg@8.14.1):
     dependencies:
-      pg: 8.16.0
+      pg: 8.14.1
 
   pg-int8@1.0.1: {}
 
@@ -12106,22 +12122,22 @@ snapshots:
     dependencies:
       pg: 8.16.0
 
-  pg-promise@11.13.0(pg-query-stream@4.8.1(pg@8.16.0)):
+  pg-promise@11.13.0(pg-query-stream@4.8.1(pg@8.14.1)):
     dependencies:
       assert-options: 0.8.2
       pg: 8.14.1
       pg-minify: 1.7.0
-      pg-query-stream: 4.8.1(pg@8.16.0)
+      pg-query-stream: 4.8.1(pg@8.14.1)
       spex: 3.4.0
     transitivePeerDependencies:
       - pg-native
 
   pg-protocol@1.10.0: {}
 
-  pg-query-stream@4.8.1(pg@8.16.0):
+  pg-query-stream@4.8.1(pg@8.14.1):
     dependencies:
-      pg: 8.16.0
-      pg-cursor: 2.15.0(pg@8.16.0)
+      pg: 8.14.1
+      pg-cursor: 2.15.0(pg@8.14.1)
 
   pg-types@2.2.0:
     dependencies:
