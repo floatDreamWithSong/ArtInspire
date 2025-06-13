@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Sse, UsePipes, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Sse, UsePipes, Param, Delete, BadRequestException, Res } from '@nestjs/common';
 import { MastraService } from './mastra';
 import { Observable } from 'rxjs';
 import {
@@ -16,6 +16,8 @@ import { User } from 'src/common/decorators/user.decorator';
 import { JwtPayload } from 'src/types/jwt';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Throttle, SkipThrottle } from '@nestjs/throttler';
+import { MakeResponse } from 'src/common/utils/response';
+import { Response } from 'express';
 
 @ApiTags('智能体')
 @Controller('agent')
@@ -61,55 +63,84 @@ export class AgentController {
     return `user${user.uid}_${character}`
   }
 
-  @Sse('chat/stream')
+  @Get('chat/stream')
   @ApiOperation({ summary: '与角色流式聊天' })
   @Throttle({ burst: { limit: 10, ttl: 60000 } })
-  async streamChat(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto, @User() user: JwtPayload) {
+  async streamChat(@Query() query: ChatRequestDto, @User() user: JwtPayload, @Res() res: Response) {
+    const querySchema = ChatRequestSchema.safeParse(query)
+    if (!querySchema.success) {
+      res.status(400).json(MakeResponse.error(1004, querySchema.error.message));
+      return;
+    }
     const { message, character } = query;
     const threadId = this.createThreadId(user, character)
-    const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId, user.uid);
-    return new Observable((subscriber) => {
-      void stream.pipeTo(new WritableStream({
+    try {
+      const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId, user.uid);
+      
+      // 设置 SSE 相关的响应头
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      
+      // 使用 res.write 写入 SSE 流数据
+      await stream.pipeTo(new WritableStream({
         write(chunk: string) {
-          subscriber.next({
+          res.write(`data: ${JSON.stringify({
             content: chunk,
             timestamp: new Date()
-          });
+          })}\n\n`);
         },
         close() {
-          subscriber.complete();
+          res.end();
         },
         abort(err) {
-          subscriber.error(err);
+          res.status(500).json(MakeResponse.error(1005, err instanceof Error ? err.message : String(err)));
         }
       }));
-    });
+    } catch (error) {
+      res.status(500).json(MakeResponse.error(1005, error instanceof Error ? error.message : String(error)));
+    }
   }
 
-  @Sse('chat/stream/visitor')
+  @Get('chat/stream/visitor')
   @ApiOperation({ summary: '(游客)与角色流式聊天' })
   @Public()
   @Throttle({ burst: { limit: 4, ttl: 60000, } })
-  async streamChatForVisitor(@Query(new ZodValidationPipe(ChatRequestSchema)) query: ChatRequestDto) {
+  async streamChatForVisitor(@Query() query: ChatRequestDto, @Res() res: Response) {
+    const querySchema = ChatRequestSchema.safeParse(query)
+    if (!querySchema.success) {
+      res.status(400).json(MakeResponse.error(1004, querySchema.error.message));
+      return;
+    }
+
     const { message, character } = query;
     const threadId = 'visitor'
-    const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId);
-    return new Observable((subscriber) => {
-      void stream.pipeTo(new WritableStream({
+    try {
+      const stream = await this.mastraService.streamChatWithCharacter(message, character, threadId);
+      
+      // 设置 SSE 相关的响应头
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      
+      // 使用 res.write 写入 SSE 流数据
+      await stream.pipeTo(new WritableStream({
         write(chunk: string) {
-          subscriber.next({
+          res.write(`data: ${JSON.stringify({
             content: chunk,
             timestamp: new Date()
-          });
+          })}\n\n`);
         },
         close() {
-          subscriber.complete();
+          res.end();
         },
         abort(err) {
-          subscriber.error(err);
+          res.status(500).json(MakeResponse.error(1005, err instanceof Error ? err.message : String(err)));
         }
       }));
-    });
+    } catch (error) {
+      res.status(500).json(MakeResponse.error(1005, error instanceof Error ? error.message : String(error)));
+    }
   }
 
 

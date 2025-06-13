@@ -107,6 +107,12 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
+      ws:
+        specifier: ^8.17.0
+        version: 8.18.2
       zod:
         specifier: ^3.24.3
         version: 3.24.3
