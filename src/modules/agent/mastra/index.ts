@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { WindInWillowsAgentService, WindInWillowsAgentServiceForVisitor } from './agents/wind-in-willows';
 import { RagService } from './rag';
 import { CharacterType } from '../constant/character';
+import { ClearCharacterMessagesResponseDto } from '../dto/chat.dto';
 
 @Injectable()
 export class MastraService {
@@ -72,7 +73,7 @@ export class MastraService {
       const result = await this.windInWillowsService.getThreadMessages(threadId, userId, limit, searchQuery, beforeId);
       return {
         success: true,
-        messages: result.uiMessages.filter(i => i.role === 'user' || i.role === 'assistant'),
+        messages: result.uiMessages.filter((i: any) => i?.role === 'user' || i?.role === 'assistant'),
         count: result.messages.length,
       };
     } catch (error) {
@@ -84,6 +85,24 @@ export class MastraService {
 
   async deleteChatThread(threadId: string) {
     await this.windInWillowsService.deleteThread(threadId);
+  }
+
+  async clearCharacterMessages(userId: number, character: CharacterType): Promise<ClearCharacterMessagesResponseDto> {
+    this.logger.log(`清空用户角色对话记录 - 用户ID: ${userId}, 角色: ${character}`);
+    try {
+      const threadId = `user${userId}_${character}`;
+      await this.windInWillowsService.deleteThread(threadId);
+      return {
+        success: true,
+        character,
+        timestamp: new Date().toISOString(),
+        message: `已成功清空与${character}的所有对话记录`,
+      };
+    } catch (error) {
+      this.logger.error('清空角色对话记录失败:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new Error(`清空对话记录失败: ${errorMessage}`);
+    }
   }
 
   // 柳林风声智能体相关方法

@@ -34,8 +34,8 @@ export class RagService {
     const result = await this.pgVector.query({
       indexName: this.indexName,
       queryVector: embedding,
-      topK: 4,
-      minScore: 0.5,
+      topK: 5,
+      minScore: 0.3,
     });
     this.logger.log("查询结果");
     this.logger.log(result)

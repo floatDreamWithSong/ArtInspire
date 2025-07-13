@@ -95,7 +95,7 @@ ${
     recordHistory: boolean = true,
   ): Promise<ReadableStream> {
     const { agent, enhancedPrompt } = await this.prepareConversationContext(message, character);
-    console.log(recordHistory)
+    console.log('recordHistory:',recordHistory)
     // 使用agent的stream方法进行流式对话
     const stream = await agent.stream([{
       role: 'system',

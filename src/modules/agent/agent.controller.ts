@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Query, Sse, UsePipes, Param, Delete, BadRequestException, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res, Delete, Body } from '@nestjs/common';
 import { MastraService } from './mastra';
-import { Observable } from 'rxjs';
 import {
   ChatRequestDto,
   ChatRequestSchema,
   GetThreadMessagesQueryDto,
   GetThreadMessagesQuerySchema,
   ThreadMessagesResponseDto,
+  ClearCharacterMessagesDto,
+  ClearCharacterMessagesSchema,
+  ClearCharacterMessagesResponseDto,
 } from './dto/chat.dto';
 import { ZodValidationPipe } from '../../common/pipes/zod-validate.pipe';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -176,6 +178,18 @@ export class AgentController {
     const { character, limit, searchQuery, beforeId } = query;
     const threadId = this.createThreadId(user, character)
     return await this.mastraService.getChatThreadMessages(threadId, user.uid, limit, searchQuery, beforeId);
+  }
+
+  @Delete('character/messages')
+  @ApiOperation({ summary: '清空指定角色的所有对话记录' })
+  @ApiResponse({ status: 200, description: '清空成功', type: ClearCharacterMessagesResponseDto })
+  @UserType('beyondVisitor') // 只有注册用户才能清空对话记录
+  async clearCharacterMessages(
+    @Body(new ZodValidationPipe(ClearCharacterMessagesSchema)) body: ClearCharacterMessagesDto,
+    @User() user: JwtPayload
+  ): Promise<ClearCharacterMessagesResponseDto> {
+    const { character } = body;
+    return await this.mastraService.clearCharacterMessages(user.uid, character);
   }
 
   @Get('rag')

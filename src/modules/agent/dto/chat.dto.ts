@@ -22,6 +22,11 @@ export const GetThreadMessagesQuerySchema = z.object({
 });
 export type GetThreadMessagesQueryDto = z.infer<typeof GetThreadMessagesQuerySchema>
 
+export const ClearCharacterMessagesSchema = z.object({
+  character: characterSchema,
+});
+export type ClearCharacterMessagesDto = z.infer<typeof ClearCharacterMessagesSchema>
+
 // DTO 类
 export class ChatResponseDto {
   @ApiProperty({ description: '回复内容' })
@@ -82,4 +87,18 @@ export class ThreadMessagesResponseDto {
 
   @ApiProperty({ description: '消息数量' })
   count: number;
-} 
+}
+
+export class ClearCharacterMessagesResponseDto {
+  @ApiProperty({ description: '是否成功' })
+  success: boolean;
+
+  @ApiProperty({ description: '清空的角色' })
+  character: string;
+
+  @ApiProperty({ description: '操作时间' })
+  timestamp: string;
+
+  @ApiProperty({ description: '消息' })
+  message: string;
+}

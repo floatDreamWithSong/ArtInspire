@@ -9,11 +9,11 @@ export class AdminController {
   // 测试用，非生产
   @Get('upgrade')
   @Public()
-  upgrade(@Query('password') pass: string, @Query('uid', ParseIntPipe) uid: number, @Query('userType', ParseIntPipe) userType: 0 | 1 | 2) {
+  async upgrade(@Query('password') pass: string, @Query('uid', ParseIntPipe) uid: number, @Query('userType', ParseIntPipe) userType: 0 | 1 | 2) {
     if (pass !== process.env.ADMIN_PASS) {
       return;
     }
-    this.p.user.update({
+    await this.p.user.update({
       where: {
         uid,
       },
