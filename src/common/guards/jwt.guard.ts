@@ -17,13 +17,13 @@ export class JwtGuard implements CanActivate {
     // 检查是否标记为公开接口
     const isPublic = this.reflector.get<boolean>(IS_PUBLIC_KEY, context.getHandler());
 
-    if (isPublic) {
-      return true;
-    }
-
+    
     const request = context.switchToHttp().getRequest<Request>();
     const authHeader = request.headers.authorization;
-
+    
+    if (isPublic && !authHeader) {
+      return true;
+    }
     if (!authHeader) {
       return false;
     }
