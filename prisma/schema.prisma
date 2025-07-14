@@ -20,4 +20,101 @@ model User {
   avatar       String?
   userType     Int           @default(0) // 0: 游客 1: 用户 2: 管理员
   registerTime DateTime      @default(now()) @map("register_time")
+  
+  // 情绪日记关联
+  diaries      Diary[]
+  replies      DiaryReply[]
+  likes        DiaryLike[]
+  
+  // 收到的通知（作为被回复者）
+  receivedNotifications UserNotification[] @relation("NotificationReceiver")
+  // 发送的通知（作为回复者）
+  sentNotifications     UserNotification[] @relation("NotificationSender")
+}
+
+model Diary {
+  id           Int           @id @default(autoincrement())
+  title        String
+  content      String?
+  mood         String        // 存储心情，格式如 "angry;happy;other"
+  isPublic     Boolean       @default(false) // 是否公开
+  isAnonymous  Boolean       @default(false) // 是否匿名
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  
+  // 关联用户
+  authorId     Int           @map("author_id")
+  author       User          @relation(fields: [authorId], references: [uid], onDelete: Cascade)
+  
+  // 关联回复和点赞
+  replies      DiaryReply[]
+  likes        DiaryLike[]
+  
+  // 关联通知
+  notifications UserNotification[]
+  
+  @@map("diaries")
+}
+
+model DiaryReply {
+  id          Int      @id @default(autoincrement())
+  content     String
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  // 关联日记
+  diaryId     Int      @map("diary_id")
+  diary       Diary    @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  
+  // 关联用户
+  authorId    Int      @map("author_id")
+  author      User     @relation(fields: [authorId], references: [uid], onDelete: Cascade)
+  
+  // 关联通知
+  notifications UserNotification[]
+  
+  @@map("diary_replies")
+}
+
+model DiaryLike {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  // 关联日记
+  diaryId   Int      @map("diary_id")
+  diary     Diary    @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  
+  // 关联用户
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  
+  // 防止重复点赞
+  @@unique([diaryId, userId])
+  @@map("diary_likes")
+}
+
+model UserNotification {
+  id          Int      @id @default(autoincrement())
+  type        String   // 通知类型: 'reply' 等
+  isRead      Boolean  @default(false) // 是否已读
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  // 接收通知的用户
+  receiverId  Int      @map("receiver_id")
+  receiver    User     @relation("NotificationReceiver", fields: [receiverId], references: [uid], onDelete: Cascade)
+  
+  // 发送通知的用户
+  senderId    Int      @map("sender_id")
+  sender      User     @relation("NotificationSender", fields: [senderId], references: [uid], onDelete: Cascade)
+  
+  // 关联的日记回复
+  replyId     Int?     @map("reply_id")
+  reply       DiaryReply? @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  
+  // 关联的日记
+  diaryId     Int      @map("diary_id")
+  diary       Diary    @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  
+  @@index([receiverId, isRead])
+  @@index([receiverId, createdAt])
+  @@map("user_notifications")
 }
