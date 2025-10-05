@@ -2,8 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { Configurations } from 'src/common/config';
 import { lastValueFrom } from 'rxjs';
-import { WechatEncryptedDataDto, WeChatOpenidSessionKeySchema } from 'src/validators/wechat';
-import { WXBizDataCrypt } from 'src/common/utils/decrypt';
+import { WeChatOpenidSessionKeySchema } from 'src/validators/wechat';
 import { EXCEPTIONS } from 'src/common/exceptions';
 import { PrismaService } from '../../common/utils/prisma/prisma.service';
 import { InjectRedis } from '@nestjs-modules/ioredis';
@@ -77,6 +76,7 @@ export class WechatService {
     return {
       token: jwtToken,
       info: {
+        userId: user.uid,
         gender: user.gender,
         username: user.username,
         avatar: user.avatar,
