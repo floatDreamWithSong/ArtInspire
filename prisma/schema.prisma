@@ -20,6 +20,7 @@ model User {
   avatar       String?
   userType     Int           @default(0) // 0: 游客 1: 用户 2: 管理员
   registerTime DateTime      @default(now()) @map("register_time")
+  birthday     DateTime?
   
   // 情绪日记关联
   diaries      Diary[]

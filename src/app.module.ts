@@ -10,6 +10,7 @@ import { PrismaModule } from './common/utils/prisma/prisma.module';
 import { RedisCacheModule } from './common/utils/redis/redis.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { DiaryModule } from './modules/diary/diary.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DiaryModule } from './modules/diary/diary.module';
     RedisCacheModule,
     AdminModule,
     DiaryModule,
+    UserModule,
   ],
   providers: [
     {
