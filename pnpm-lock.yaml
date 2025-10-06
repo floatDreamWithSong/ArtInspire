@@ -10,28 +10,28 @@ importers:
     dependencies:
       '@ai-sdk/cohere':
         specifier: ^1.2.10
-        version: 1.2.10(zod@4.1.11)
+        version: 1.2.10(zod@3.25.76)
       '@ai-sdk/openai':
         specifier: ^1.3.23
-        version: 1.3.23(zod@4.1.11)
+        version: 1.3.23(zod@3.25.76)
       '@mastra/core':
         specifier: 0.9.4
-        version: 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@4.1.11)
+        version: 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@3.25.76)
       '@mastra/fastembed':
         specifier: ^0.0.3
-        version: 0.0.3(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@4.1.11)
+        version: 0.0.3(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@3.25.76)
       '@mastra/libsql':
         specifier: 0.0.4
-        version: 0.0.4(openapi-types@12.1.3)(react@19.1.0)(zod@4.1.11)
+        version: 0.0.4(openapi-types@12.1.3)(react@19.1.0)(zod@3.25.76)
       '@mastra/memory':
         specifier: 0.3.4
         version: 0.3.4(openapi-types@12.1.3)(react@19.1.0)
       '@mastra/pg':
         specifier: ^0.3.4
-        version: 0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.16.3))(react@19.1.0)(zod@4.1.11)
+        version: 0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.16.3))(react@19.1.0)(zod@3.25.76)
       '@mastra/rag':
         specifier: ^0.1.23
-        version: 0.1.23(ai@4.3.17(react@19.1.0)(zod@4.1.11))(openapi-types@12.1.3)(react@19.1.0)
+        version: 0.1.23(ai@4.3.17(react@19.1.0)(zod@3.25.76))(openapi-types@12.1.3)(react@19.1.0)
       '@nestjs-modules/ioredis':
         specifier: ^2.0.2
         version: 2.0.2(@grpc/grpc-js@1.13.4)(@grpc/proto-loader@0.7.15)(@nestjs/axios@4.0.0(@nestjs/common@11.1.3(reflect-metadata@0.2.2)(rxjs@7.8.2))(axios@1.10.0)(rxjs@7.8.2))(@nestjs/common@11.1.3(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.3)(@prisma/client@6.11.1(prisma@6.11.1(typescript@5.8.3))(typescript@5.8.3))(ioredis@5.6.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -70,7 +70,7 @@ importers:
         version: 6.4.17
       ai:
         specifier: ^4.3.17
-        version: 4.3.17(react@19.1.0)(zod@4.1.11)
+        version: 4.3.17(react@19.1.0)(zod@3.25.76)
       axios:
         specifier: ^1.10.0
         version: 1.10.0
@@ -100,7 +100,7 @@ importers:
         version: 6.11.1(typescript@5.8.3)
       qwen-ai-provider:
         specifier: ^0.1.0
-        version: 0.1.0(zod@4.1.11)
+        version: 0.1.0(zod@3.25.76)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -114,8 +114,11 @@ importers:
         specifier: ^8.18.3
         version: 8.18.3
       zod:
-        specifier: ^4.1.11
-        version: 4.1.11
+        specifier: ^3.25.76
+        version: 3.25.76
+      zod4:
+        specifier: npm:zod@^4.1.11
+        version: zod@4.1.11
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.1
@@ -5966,26 +5969,26 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/cohere@1.2.10(zod@4.1.11)':
+  '@ai-sdk/cohere@1.2.10(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.11)
-      zod: 4.1.11
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.76)
+      zod: 3.25.76
 
-  '@ai-sdk/openai@1.3.23(zod@4.1.11)':
+  '@ai-sdk/openai@1.3.23(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.11)
-      zod: 4.1.11
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.76)
+      zod: 3.25.76
 
-  '@ai-sdk/provider-utils@1.0.22(zod@4.1.11)':
+  '@ai-sdk/provider-utils@1.0.22(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 0.0.26
       eventsource-parser: 1.1.2
       nanoid: 3.3.11
       secure-json-parse: 2.7.0
     optionalDependencies:
-      zod: 4.1.11
+      zod: 3.25.76
 
   '@ai-sdk/provider-utils@2.2.8(zod@3.25.76)':
     dependencies:
@@ -5993,13 +5996,6 @@ snapshots:
       nanoid: 3.3.11
       secure-json-parse: 2.7.0
       zod: 3.25.76
-
-  '@ai-sdk/provider-utils@2.2.8(zod@4.1.11)':
-    dependencies:
-      '@ai-sdk/provider': 1.1.3
-      nanoid: 3.3.11
-      secure-json-parse: 2.7.0
-      zod: 4.1.11
 
   '@ai-sdk/provider@0.0.26':
     dependencies:
@@ -6009,15 +6005,15 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@0.0.70(react@19.1.0)(zod@4.1.11)':
+  '@ai-sdk/react@0.0.70(react@19.1.0)(zod@3.25.76)':
     dependencies:
-      '@ai-sdk/provider-utils': 1.0.22(zod@4.1.11)
-      '@ai-sdk/ui-utils': 0.0.50(zod@4.1.11)
+      '@ai-sdk/provider-utils': 1.0.22(zod@3.25.76)
+      '@ai-sdk/ui-utils': 0.0.50(zod@3.25.76)
       swr: 2.3.4(react@19.1.0)
       throttleit: 2.1.0
     optionalDependencies:
       react: 19.1.0
-      zod: 4.1.11
+      zod: 3.25.76
 
   '@ai-sdk/react@1.2.12(react@19.1.0)(zod@3.25.76)':
     dependencies:
@@ -6029,42 +6025,32 @@ snapshots:
     optionalDependencies:
       zod: 3.25.76
 
-  '@ai-sdk/react@1.2.12(react@19.1.0)(zod@4.1.11)':
+  '@ai-sdk/solid@0.0.54(zod@3.25.76)':
     dependencies:
-      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.11)
-      '@ai-sdk/ui-utils': 1.2.11(zod@4.1.11)
-      react: 19.1.0
-      swr: 2.3.4(react@19.1.0)
-      throttleit: 2.1.0
-    optionalDependencies:
-      zod: 4.1.11
-
-  '@ai-sdk/solid@0.0.54(zod@4.1.11)':
-    dependencies:
-      '@ai-sdk/provider-utils': 1.0.22(zod@4.1.11)
-      '@ai-sdk/ui-utils': 0.0.50(zod@4.1.11)
+      '@ai-sdk/provider-utils': 1.0.22(zod@3.25.76)
+      '@ai-sdk/ui-utils': 0.0.50(zod@3.25.76)
     transitivePeerDependencies:
       - zod
 
-  '@ai-sdk/svelte@0.0.57(svelte@5.33.0)(zod@4.1.11)':
+  '@ai-sdk/svelte@0.0.57(svelte@5.33.0)(zod@3.25.76)':
     dependencies:
-      '@ai-sdk/provider-utils': 1.0.22(zod@4.1.11)
-      '@ai-sdk/ui-utils': 0.0.50(zod@4.1.11)
+      '@ai-sdk/provider-utils': 1.0.22(zod@3.25.76)
+      '@ai-sdk/ui-utils': 0.0.50(zod@3.25.76)
       sswr: 2.2.0(svelte@5.33.0)
     optionalDependencies:
       svelte: 5.33.0
     transitivePeerDependencies:
       - zod
 
-  '@ai-sdk/ui-utils@0.0.50(zod@4.1.11)':
+  '@ai-sdk/ui-utils@0.0.50(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 0.0.26
-      '@ai-sdk/provider-utils': 1.0.22(zod@4.1.11)
+      '@ai-sdk/provider-utils': 1.0.22(zod@3.25.76)
       json-schema: 0.4.0
       secure-json-parse: 2.7.0
-      zod-to-json-schema: 3.24.6(zod@4.1.11)
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
     optionalDependencies:
-      zod: 4.1.11
+      zod: 3.25.76
 
   '@ai-sdk/ui-utils@1.2.11(zod@3.25.76)':
     dependencies:
@@ -6073,17 +6059,10 @@ snapshots:
       zod: 3.25.76
       zod-to-json-schema: 3.24.6(zod@3.25.76)
 
-  '@ai-sdk/ui-utils@1.2.11(zod@4.1.11)':
+  '@ai-sdk/vue@0.0.59(vue@3.5.14(typescript@5.8.3))(zod@3.25.76)':
     dependencies:
-      '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.11)
-      zod: 4.1.11
-      zod-to-json-schema: 3.24.6(zod@4.1.11)
-
-  '@ai-sdk/vue@0.0.59(vue@3.5.14(typescript@5.8.3))(zod@4.1.11)':
-    dependencies:
-      '@ai-sdk/provider-utils': 1.0.22(zod@4.1.11)
-      '@ai-sdk/ui-utils': 0.0.50(zod@4.1.11)
+      '@ai-sdk/provider-utils': 1.0.22(zod@3.25.76)
+      '@ai-sdk/ui-utils': 0.0.50(zod@3.25.76)
       swrv: 1.1.0(vue@3.5.14(typescript@5.8.3))
     optionalDependencies:
       vue: 3.5.14(typescript@5.8.3)
@@ -7400,62 +7379,9 @@ snapshots:
       - valibot
       - zod-openapi
 
-  '@mastra/core@0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@4.1.11)':
+  '@mastra/fastembed@0.0.3(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@3.25.76)':
     dependencies:
-      '@libsql/client': 0.14.0
-      '@opentelemetry/api': 1.9.0
-      '@opentelemetry/auto-instrumentations-node': 0.56.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/exporter-trace-otlp-grpc': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/exporter-trace-otlp-http': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/otlp-exporter-base': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/otlp-transformer': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-metrics': 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-node': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-node': 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.36.0
-      ai: 4.3.17(react@19.1.0)(zod@4.1.11)
-      cohere-ai: 7.17.1
-      date-fns: 3.6.0
-      dotenv: 16.6.1
-      fastembed: 1.14.4
-      hono: 4.8.4
-      hono-openapi: 0.4.8(hono@4.8.4)(openapi-types@12.1.3)(zod@4.1.11)
-      json-schema: 0.4.0
-      json-schema-to-zod: 2.6.1
-      pino: 9.7.0
-      pino-pretty: 13.0.0
-      radash: 12.1.1
-      sift: 17.1.3
-      xstate: 5.20.1
-      zod: 4.1.11
-      zod-from-json-schema: 0.0.5
-      zod-to-json-schema: 3.24.6(zod@4.1.11)
-    transitivePeerDependencies:
-      - '@hono/arktype-validator'
-      - '@hono/effect-validator'
-      - '@hono/typebox-validator'
-      - '@hono/valibot-validator'
-      - '@hono/zod-validator'
-      - '@sinclair/typebox'
-      - '@valibot/to-json-schema'
-      - arktype
-      - aws-crt
-      - bufferutil
-      - effect
-      - encoding
-      - openapi-types
-      - react
-      - supports-color
-      - utf-8-validate
-      - valibot
-      - zod-openapi
-
-  '@mastra/fastembed@0.0.3(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@4.1.11)':
-    dependencies:
-      ai: 3.4.33(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@4.1.11)
+      ai: 3.4.33(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@3.25.76)
       fastembed: 1.14.4
     transitivePeerDependencies:
       - openai
@@ -7466,10 +7392,10 @@ snapshots:
       - vue
       - zod
 
-  '@mastra/libsql@0.0.4(openapi-types@12.1.3)(react@19.1.0)(zod@4.1.11)':
+  '@mastra/libsql@0.0.4(openapi-types@12.1.3)(react@19.1.0)(zod@3.25.76)':
     dependencies:
       '@libsql/client': 0.15.9
-      '@mastra/core': 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@4.1.11)
+      '@mastra/core': 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@3.25.76)
     transitivePeerDependencies:
       - '@hono/arktype-validator'
       - '@hono/effect-validator'
@@ -7524,9 +7450,9 @@ snapshots:
       - valibot
       - zod-openapi
 
-  '@mastra/pg@0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.16.3))(react@19.1.0)(zod@4.1.11)':
+  '@mastra/pg@0.3.4(openapi-types@12.1.3)(pg-query-stream@4.8.1(pg@8.16.3))(react@19.1.0)(zod@3.25.76)':
     dependencies:
-      '@mastra/core': 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@4.1.11)
+      '@mastra/core': 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@3.25.76)
       async-mutex: 0.5.0
       pg: 8.16.3
       pg-promise: 11.15.0(pg-query-stream@4.8.1(pg@8.16.3))
@@ -7554,11 +7480,11 @@ snapshots:
       - zod
       - zod-openapi
 
-  '@mastra/rag@0.1.23(ai@4.3.17(react@19.1.0)(zod@4.1.11))(openapi-types@12.1.3)(react@19.1.0)':
+  '@mastra/rag@0.1.23(ai@4.3.17(react@19.1.0)(zod@3.25.76))(openapi-types@12.1.3)(react@19.1.0)':
     dependencies:
       '@mastra/core': 0.9.4(openapi-types@12.1.3)(react@19.1.0)(zod@3.25.76)
       '@paralleldrive/cuid2': 2.2.2
-      ai: 4.3.17(react@19.1.0)(zod@4.1.11)
+      ai: 4.3.17(react@19.1.0)(zod@3.25.76)
       js-tiktoken: 1.0.20
       node-html-better-parser: 1.5.1
       pathe: 2.0.3
@@ -9544,26 +9470,26 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  ai@3.4.33(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@4.1.11):
+  ai@3.4.33(react@19.1.0)(sswr@2.2.0(svelte@5.33.0))(svelte@5.33.0)(vue@3.5.14(typescript@5.8.3))(zod@3.25.76):
     dependencies:
       '@ai-sdk/provider': 0.0.26
-      '@ai-sdk/provider-utils': 1.0.22(zod@4.1.11)
-      '@ai-sdk/react': 0.0.70(react@19.1.0)(zod@4.1.11)
-      '@ai-sdk/solid': 0.0.54(zod@4.1.11)
-      '@ai-sdk/svelte': 0.0.57(svelte@5.33.0)(zod@4.1.11)
-      '@ai-sdk/ui-utils': 0.0.50(zod@4.1.11)
-      '@ai-sdk/vue': 0.0.59(vue@3.5.14(typescript@5.8.3))(zod@4.1.11)
+      '@ai-sdk/provider-utils': 1.0.22(zod@3.25.76)
+      '@ai-sdk/react': 0.0.70(react@19.1.0)(zod@3.25.76)
+      '@ai-sdk/solid': 0.0.54(zod@3.25.76)
+      '@ai-sdk/svelte': 0.0.57(svelte@5.33.0)(zod@3.25.76)
+      '@ai-sdk/ui-utils': 0.0.50(zod@3.25.76)
+      '@ai-sdk/vue': 0.0.59(vue@3.5.14(typescript@5.8.3))(zod@3.25.76)
       '@opentelemetry/api': 1.9.0
       eventsource-parser: 1.1.2
       json-schema: 0.4.0
       jsondiffpatch: 0.6.0
       secure-json-parse: 2.7.0
-      zod-to-json-schema: 3.24.6(zod@4.1.11)
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
     optionalDependencies:
       react: 19.1.0
       sswr: 2.2.0(svelte@5.33.0)
       svelte: 5.33.0
-      zod: 4.1.11
+      zod: 3.25.76
     transitivePeerDependencies:
       - solid-js
       - vue
@@ -9577,18 +9503,6 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       jsondiffpatch: 0.6.0
       zod: 3.25.76
-    optionalDependencies:
-      react: 19.1.0
-
-  ai@4.3.17(react@19.1.0)(zod@4.1.11):
-    dependencies:
-      '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.11)
-      '@ai-sdk/react': 1.2.12(react@19.1.0)(zod@4.1.11)
-      '@ai-sdk/ui-utils': 1.2.11(zod@4.1.11)
-      '@opentelemetry/api': 1.9.0
-      jsondiffpatch: 0.6.0
-      zod: 4.1.11
     optionalDependencies:
       react: 19.1.0
 
@@ -10851,14 +10765,6 @@ snapshots:
     optionalDependencies:
       hono: 4.8.4
       zod: 3.25.76
-
-  hono-openapi@0.4.8(hono@4.8.4)(openapi-types@12.1.3)(zod@4.1.11):
-    dependencies:
-      json-schema-walker: 2.0.0
-      openapi-types: 12.1.3
-    optionalDependencies:
-      hono: 4.8.4
-      zod: 4.1.11
 
   hono@4.8.4: {}
 
@@ -12148,11 +12054,11 @@ snapshots:
 
   quick-lru@5.1.1: {}
 
-  qwen-ai-provider@0.1.0(zod@4.1.11):
+  qwen-ai-provider@0.1.0(zod@3.25.76):
     dependencies:
       '@ai-sdk/provider': 1.1.3
-      '@ai-sdk/provider-utils': 2.2.8(zod@4.1.11)
-      zod: 4.1.11
+      '@ai-sdk/provider-utils': 2.2.8(zod@3.25.76)
+      zod: 3.25.76
 
   radash@12.1.1: {}
 
@@ -13021,10 +12927,6 @@ snapshots:
   zod-to-json-schema@3.24.6(zod@3.25.76):
     dependencies:
       zod: 3.25.76
-
-  zod-to-json-schema@3.24.6(zod@4.1.11):
-    dependencies:
-      zod: 4.1.11
 
   zod@3.25.76: {}
 

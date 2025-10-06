@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod4';
 
 // 创建情绪日记的验证器
 export const CreateDiarySchema = z.object({

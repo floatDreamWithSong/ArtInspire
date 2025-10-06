@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod4';
 import { ApiProperty } from '@nestjs/swagger';
 
 const characterSchema = z.enum(['rat', 'badger', 'toad', 'mole'])

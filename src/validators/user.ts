@@ -1,4 +1,4 @@
-import z from "zod";
+import z from "zod4";
 
 export const updateUserInfoSchema = z.object({
   username: z.string().optional(),

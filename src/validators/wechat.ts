@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod4';
 export const WeChatEncryptedDataSchema = z.object({
   encryptedData: z.string(),
   iv: z.string(),
