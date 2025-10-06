@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nest
 import { PrismaService } from '../../common/utils/prisma/prisma.service';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
-import { CreateDiaryDto, UpdateDiaryDto, CreateReplyDto, GetDiariesQueryDto } from '../../validators/diary';
+import { CreateDiaryDto, UpdateDiaryDto, CreateReplyDto, GetDiariesQueryDto, PageLimitDto } from '../../validators/diary';
 
 @Injectable()
 export class DiaryService {
@@ -12,7 +12,7 @@ export class DiaryService {
   constructor(
     private readonly prisma: PrismaService,
     @InjectRedis() private readonly redisService: Redis,
-  ) {}
+  ) { }
 
   // 创建情绪日记
   async createDiary(userId: number, createDiaryDto: CreateDiaryDto) {
@@ -45,16 +45,106 @@ export class DiaryService {
   }
 
   // 获取情绪日记列表
-  async getPublicDiaries(query: GetDiariesQueryDto, currentUserId?: number) {
-    const { page, limit, authorId } = query;
+  async getDiaryList(query: GetDiariesQueryDto & PageLimitDto, currentUserId?: number) {
+    const { page, limit, authorId, timeStart, timeEnd, titleKeywords, contentKeywords, moods, authorKeywords } = query;
     const skip = (page - 1) * limit;
+
+    // 构建筛选条件
+    const whereConditions: {
+      isPublic?: boolean;
+      authorId?: number;
+      createdAt?: {
+        gte?: Date;
+        lte?: Date;
+      };
+      AND?: Array<{
+        OR?: Array<{
+          mood?: { contains: string; mode: 'insensitive' };
+        }>;
+        AND?: Array<{
+          content?: { contains: string; mode: 'insensitive' };
+          title?: { contains: string; mode: 'insensitive' };
+          author?: { username: { contains: string; mode: 'insensitive' } };
+        }>;
+      }>;
+    } = {
+      // 如果用户不相同，或者是匿名用户，则只能查看公开的，否则可以自定义查看
+      isPublic: currentUserId !== authorId ? true : !currentUserId ? true : query.isPublic,
+    };
+
+    // 作者筛选
+    if (authorId) {
+      whereConditions.authorId = authorId;
+    }
+
+    // 时间范围筛选
+    if (timeStart || timeEnd) {
+      whereConditions.createdAt = {};
+      if (timeStart) {
+        whereConditions.createdAt.gte = new Date(timeStart);
+      }
+      if (timeEnd) {
+        whereConditions.createdAt.lte = new Date(timeEnd);
+      }
+    }
+
+    // 标题关键词筛选
+    if (titleKeywords && titleKeywords.length > 0) {
+      whereConditions.AND = whereConditions.AND || [];
+      whereConditions.AND.push({
+        AND: titleKeywords.map(keyword => ({
+          title: {
+            contains: keyword,
+            mode: 'insensitive',
+          },
+        })),
+      });
+    }
+
+    // 内容关键词筛选
+    if (contentKeywords && contentKeywords.length > 0) {
+      whereConditions.AND = whereConditions.AND || [];
+      whereConditions.AND.push({
+        AND: contentKeywords.map(keyword => ({
+          content: {
+            contains: keyword,
+            mode: 'insensitive',
+          },
+        })),
+      });
+    }
+
+    // 情绪筛选
+    if (moods && moods.length > 0) {
+      whereConditions.AND = whereConditions.AND || [];
+      whereConditions.AND.push({
+        OR: moods.map(mood => ({
+          mood: {
+            contains: mood,
+            mode: 'insensitive',
+          },
+        })),
+      });
+    }
+
+    // 作者昵称筛选
+    if (authorKeywords && authorKeywords.length > 0) {
+      whereConditions.AND = whereConditions.AND || [];
+      whereConditions.AND.push({
+        AND: authorKeywords.map(keyword => ({
+          author: {
+            username: {
+              contains: keyword,
+              mode: 'insensitive',
+            },
+          },
+        })),
+      });
+    }
 
     const [diaries, total] = await Promise.all([
       this.prisma.diary.findMany({
-        where: {
-          isPublic: true,
-          authorId: authorId,
-        },
+        where: whereConditions,
         include: {
           author: {
             select: {
@@ -77,10 +167,7 @@ export class DiaryService {
         take: limit,
       }),
       this.prisma.diary.count({
-        where: {
-          isPublic: true,
-          authorId: authorId,
-        },
+        where: whereConditions,
       }),
     ]);
 

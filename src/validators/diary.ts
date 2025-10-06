@@ -23,30 +23,28 @@ export const CreateReplySchema = z.object({
   content: z.string().min(1, '回复内容不能为空').max(500, '回复内容不能超过500个字符'),
 });
 
+export const PageLimitSchema = z.object({
+  page: z.string().transform(Number).pipe(z.number().min(1)).default(1),
+  limit: z.string().transform(Number).pipe(z.number().min(1).max(50)).default(10),
+})
+
 // 分页查询验证器
 export const GetDiariesQuerySchema = z.object({
-  page: z.string().transform(Number).pipe(z.number().min(1)).default('1'),
-  limit: z.string().transform(Number).pipe(z.number().min(1).max(50)).default('10'),
   isPublic: z.string().transform(val => val === 'true').pipe(z.boolean()).optional(),
   authorId: z.string().transform(Number).pipe(z.number()).optional(),
+  // 闭区间时间查询，不传表示不限制时间
+  timeStart: z.number().optional(),
+  timeEnd: z.number().optional(),
+  titleKeywords: z.string().transform(s=>s.split(';').filter(Boolean)).optional(), // 日记标题的关键词
+  contentKeywords: z.string().transform(s=>s.split(';').filter(Boolean)).optional(), // 日记内容的关键词，要求满足全部关键词才匹配
+  moods: z.string().transform(s=>s.split(';').filter(Boolean)).optional(), // 需要包含的情绪词， 要求满足任意情绪关键词词即认为匹配
+  authorKeywords: z.string().transform(s=>s.split(';').filter(Boolean)).optional(), // 作者昵称关键词，要求满足全部关键词才匹配
 });
 
-// 回复分页查询验证器
-export const GetRepliesQuerySchema = z.object({
-  page: z.number().min(1).default(1),
-  limit: z.number().min(1).max(50).default(10),
-});
-
-// 通知分页查询验证器  
-export const GetNotificationsQuerySchema = z.object({
-  page: z.number().min(1).default(1),
-  limit: z.number().min(1).max(50).default(20),
-});
 
 // DTO 类型定义
 export type CreateDiaryDto = z.infer<typeof CreateDiarySchema>;
 export type UpdateDiaryDto = z.infer<typeof UpdateDiarySchema>;
 export type CreateReplyDto = z.infer<typeof CreateReplySchema>;
+export type PageLimitDto = z.infer<typeof PageLimitSchema>;
 export type GetDiariesQueryDto = z.infer<typeof GetDiariesQuerySchema>;
-export type GetRepliesQueryDto = z.infer<typeof GetRepliesQuerySchema>;
-export type GetNotificationsQueryDto = z.infer<typeof GetNotificationsQuerySchema>; 

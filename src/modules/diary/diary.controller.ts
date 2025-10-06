@@ -26,6 +26,10 @@ import {
   CreateDiarySchema,
   UpdateDiarySchema,
   CreateReplySchema,
+  GetDiariesQuerySchema,
+  PageLimitSchema,
+  PageLimitDto,
+  GetDiariesQueryDto,
 } from 'src/validators/diary';
 
 @ApiTags('情绪日记管理')
@@ -51,21 +55,29 @@ export class DiaryController {
 
   @Get()
   @Public()
-  @ApiOperation({ summary: '获取公开情绪日记列表，不传authorId则获取所有公开的日记' })
+  @ApiOperation({ summary: '获取情绪日记列表，支持多种筛选条件' })
   @ApiQuery({ name: 'page', required: false, description: '页码，默认为1' })
   @ApiQuery({ name: 'limit', required: false, description: '每页数量，默认为10' })
+  @ApiQuery({ name: 'isPublic', required: false, description: '是否公开，true/false' })
+  @ApiQuery({ name: 'authorId', required: false, description: '作者ID' })
+  @ApiQuery({ name: 'timeStart', required: false, description: '开始时间戳（毫秒）' })
+  @ApiQuery({ name: 'timeEnd', required: false, description: '结束时间戳（毫秒）' })
+  @ApiQuery({ name: 'titleKeywords', required: false, description: '标题关键词数组，满足任意一个即匹配' })
+  @ApiQuery({ name: 'contentKeywords', required: false, description: '内容关键词数组，需要满足全部关键词' })
+  @ApiQuery({ name: 'moods', required: false, description: '情绪关键词数组，满足任意一个即匹配' })
+  @ApiQuery({ name: 'authorKeywords', required: false, description: '作者昵称关键词数组，需要满足全部关键词' })
   @ApiResponse({ status: 200, description: '获取成功' })
   async getPublicDiaries(
-    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+    @Query(new ZodValidationPipe(PageLimitSchema)) pagelimit: PageLimitDto,
+    @Query(new ZodValidationPipe(GetDiariesQuerySchema)) options: GetDiariesQueryDto,
     @User() user?: JwtPayload,
   ) {
     const query = {
-      page,
-      limit,
-    };
+      ...pagelimit,
+      ...options
+    }
     this.logger.log(`获取情绪日记列表: ${JSON.stringify(query)}`);
-    return await this.diaryService.getPublicDiaries(query, user?.uid);
+    return await this.diaryService.getDiaryList(query, user?.uid);
   }
 
   @Get(':id')
@@ -152,22 +164,22 @@ export class DiaryController {
     return await this.diaryService.createReply(id, user.uid, createReplyDto);
   }
 
-  @Get('user/:userId')
-  @Public()
-  @ApiOperation({ summary: '获取用户的情绪日记' })
-  @ApiParam({ name: 'userId', description: '用户ID' })
-  @ApiQuery({ name: 'page', required: false, description: '页码，默认为1' })
-  @ApiQuery({ name: 'limit', required: false, description: '每页数量，默认为10' })
-  @ApiResponse({ status: 200, description: '获取成功' })
-  async getUserDiaries(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
-    @User() user?: JwtPayload,
-  ) {
-    this.logger.log(`获取用户 ${userId} 的情绪日记`);
-    return await this.diaryService.getUserDiaries(userId, user?.uid, page, limit);
-  }
+  // @Get('user/:userId')
+  // @Public()
+  // @ApiOperation({ summary: '获取用户的情绪日记' })
+  // @ApiParam({ name: 'userId', description: '用户ID' })
+  // @ApiQuery({ name: 'page', required: false, description: '页码，默认为1' })
+  // @ApiQuery({ name: 'limit', required: false, description: '每页数量，默认为10' })
+  // @ApiResponse({ status: 200, description: '获取成功' })
+  // async getUserDiaries(
+  //   @Param('userId', ParseIntPipe) userId: number,
+  //   @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
+  //   @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+  //   @User() user?: JwtPayload,
+  // ) {
+  //   this.logger.log(`获取用户 ${userId} 的情绪日记`);
+  //   return await this.diaryService.getUserDiaries(userId, user?.uid, page, limit);
+  // }
 
   @Get(':id/replies')
   @Public()

@@ -72,7 +72,7 @@
     "rxjs": "^7.8.2",
     "uuid": "^9.0.1",
     "ws": "^8.18.3",
-    "zod": "^3.25.76"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
