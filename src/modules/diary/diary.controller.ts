@@ -164,23 +164,6 @@ export class DiaryController {
     return await this.diaryService.createReply(id, user.uid, createReplyDto);
   }
 
-  // @Get('user/:userId')
-  // @Public()
-  // @ApiOperation({ summary: '获取用户的情绪日记' })
-  // @ApiParam({ name: 'userId', description: '用户ID' })
-  // @ApiQuery({ name: 'page', required: false, description: '页码，默认为1' })
-  // @ApiQuery({ name: 'limit', required: false, description: '每页数量，默认为10' })
-  // @ApiResponse({ status: 200, description: '获取成功' })
-  // async getUserDiaries(
-  //   @Param('userId', ParseIntPipe) userId: number,
-  //   @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
-  //   @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
-  //   @User() user?: JwtPayload,
-  // ) {
-  //   this.logger.log(`获取用户 ${userId} 的情绪日记`);
-  //   return await this.diaryService.getUserDiaries(userId, user?.uid, page, limit);
-  // }
-
   @Get(':id/replies')
   @Public()
   @ApiOperation({ summary: '分页获取日记的回复列表' })
@@ -194,9 +177,10 @@ export class DiaryController {
     @Param('id', ParseIntPipe) id: number,
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+    @User() user?: JwtPayload,
   ) {
     this.logger.log(`获取日记 ${id} 的回复列表，页码: ${page}`);
-    return await this.diaryService.getDiaryReplies(id, page, limit);
+    return await this.diaryService.getDiaryReplies(id, page, limit, user?.uid);
   }
 
   @Delete('reply/:replyId')

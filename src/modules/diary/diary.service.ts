@@ -430,78 +430,18 @@ export class DiaryService {
     return reply;
   }
 
-  // 获取用户的情绪日记
-  async getUserDiaries(userId: number, currentUserId?: number, page = 1, limit = 10) {
-    const skip = (page - 1) * limit;
-
-    // 如果是查看自己的日记，可以看到所有的；如果是查看别人的，只能看到公开的
-    const where = userId === currentUserId ? { authorId: userId } : { authorId: userId, isPublic: true };
-
-    const [diaries, total] = await Promise.all([
-      this.prisma.diary.findMany({
-        where,
-        include: {
-          author: {
-            select: {
-              uid: true,
-              username: true,
-              avatar: true,
-            },
-          },
-          _count: {
-            select: {
-              replies: true,
-              likes: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-        skip,
-        take: limit,
-      }),
-      this.prisma.diary.count({ where }),
-    ]);
-
-    // 处理匿名显示
-    const processedDiaries = diaries.map((diary) => {
-      if (diary.isAnonymous && diary.authorId !== currentUserId) {
-        return {
-          ...diary,
-          author: {
-            uid: 0,
-            username: '匿名用户',
-            avatar: null,
-          },
-        };
-      }
-      return diary;
-    });
-
-    return {
-      data: processedDiaries,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
-  }
-
   // 获取日记的回复列表（分页）
-  async getDiaryReplies(diaryId: number, page = 1, limit = 10) {
+  async getDiaryReplies(diaryId: number, page = 1, limit = 10, currentUserId?: number) {
     const diary = await this.prisma.diary.findUnique({
       where: { id: diaryId },
-      select: { isPublic: true },
+      select: { isPublic: true, authorId: true },
     });
 
     if (!diary) {
       throw new NotFoundException('情绪日记不存在');
     }
 
-    if (!diary.isPublic) {
+    if (!diary.isPublic && diary.authorId !== currentUserId) {
       throw new ForbiddenException('无法获取私密日记的回复');
     }
 
