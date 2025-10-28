@@ -61,3 +61,5 @@ backup
 .tmp
 *.md
 .cursor
+public/*
+!public/.gitkeep

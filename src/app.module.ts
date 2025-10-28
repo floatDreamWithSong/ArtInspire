@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { JwtGuard } from './common/guards/jwt.guard';
 import { UserTypeGuard } from './common/guards/user-type.guard';
 import { WechatModule } from './modules/wechat/wechat.module';
@@ -14,6 +16,11 @@ import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
+    // 静态资源服务配置
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/static', // 静态资源访问路径前缀
+    }),
     WechatModule,
     AgentModule,
     JwtUtilsModule,
