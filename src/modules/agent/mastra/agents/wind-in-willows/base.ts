@@ -33,7 +33,7 @@ export class WindInWillowsAgent {
 你需要基于提供的相关信息来回答问题，但要用你的角色性格来表达。
 如果材料中没有相关信息，请诚实说明，但仍然用你的角色特点来安慰和支持孩子。
 你的主要任务是帮助和安慰有心理问题的小朋友，用温暖、理解和智慧来回应他们。`,
-        model: this.modelService.getOpenAI()('deepseek-v3'),
+        model: this.modelService.getOpenAI()('deepseek-v3.1'),
         memory,
       });
 

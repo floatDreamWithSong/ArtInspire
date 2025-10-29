@@ -17,7 +17,9 @@ export class RagService {
     private qwenService: ModelService,
   ) {
     this.pgVector = new PgVector(this.configService.pgVectorConfig);
-    this.embedder = this.qwenService.getOpenAI().embedding('text-embedding-v2');
+    this.embedder = this.qwenService.getOpenAI().embedding('text-embedding-v4',{
+      dimensions: 1536,
+    });
   }
 
   async textRagQuery(ragQueryText: string) {
