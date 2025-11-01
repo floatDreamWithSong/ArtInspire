@@ -29,6 +29,11 @@ export class Configurations implements OnModuleInit {
   static COS_BUCKET: string;
   static COS_REGION: string = 'ap-shanghai';
   static CRYPTO_SECRET: string;
+  // tts
+  static TTS_APPID: string;
+  static TTS_ACCESS_TOKEN: string;
+  static TTS_RESOURCE_ID: string;
+  static TTS_ENDPOINT: string;
 
   constructor(private readonly configService: ConfigService) {}
 
@@ -48,6 +53,10 @@ export class Configurations implements OnModuleInit {
     Configurations.COS_SECRET_KEY = this.configService.getOrThrow<string>('COS_SECRET_KEY');
     Configurations.COS_BUCKET = this.configService.getOrThrow<string>('COS_BUCKET');
     Configurations.CRYPTO_SECRET = this.configService.getOrThrow<string>('CRYPTO_SECRET');
+    Configurations.TTS_APPID = this.configService.getOrThrow<string>('TTS_APPID');
+    Configurations.TTS_ACCESS_TOKEN = this.configService.getOrThrow<string>('TTS_ACCESS_TOKEN');
+    Configurations.TTS_RESOURCE_ID = this.configService.getOrThrow<string>('TTS_RESOURCE_ID');
+    Configurations.TTS_ENDPOINT = this.configService.getOrThrow<string>('TTS_ENDPOINT');
 
     console.log('Configurations.BUCKET', Configurations.COS_BUCKET);
     // 对于HTTP_TIMEOUT和HTTP_MAX_REDIRECTS这类有默认值的配置可以保持原样

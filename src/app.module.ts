@@ -13,6 +13,8 @@ import { RedisCacheModule } from './common/utils/redis/redis.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { DiaryModule } from './modules/diary/diary.module';
 import { UserModule } from './modules/user/user.module';
+import { TtsController } from './modules/tts/tts.controller';
+import { TtsModule } from './modules/tts/tts.module';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { UserModule } from './modules/user/user.module';
     AdminModule,
     DiaryModule,
     UserModule,
+    TtsModule,
   ],
   providers: [
     {
@@ -41,5 +44,6 @@ import { UserModule } from './modules/user/user.module';
       useClass: UserTypeGuard,
     },
   ],
+  controllers: [TtsController],
 })
 export class AppModule {}
