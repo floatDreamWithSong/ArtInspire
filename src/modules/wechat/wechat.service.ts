@@ -82,7 +82,7 @@ export class WechatService {
         avatar: user.avatar,
         userType: user.userType,
         registerTime: user.registerTime,
-        birthday: user.birthday as Date | null
+        birthday: user.birthday
       },
     };
   }

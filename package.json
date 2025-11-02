@@ -39,6 +39,8 @@
   "dependencies": {
     "@ai-sdk/cohere": "^1.2.10",
     "@ai-sdk/openai": "^1.3.23",
+    "@huaweicloud/huaweicloud-sdk-core": "^3.1.173",
+    "@huaweicloud/huaweicloud-sdk-sis": "^3.1.173",
     "@mastra/core": "0.9.4",
     "@mastra/fastembed": "^0.0.3",
     "@mastra/libsql": "0.0.4",

@@ -21,7 +21,7 @@ async function bootstrap() {
   };
   const app = await NestFactory.create(AppModule, {
     logger: new LoggerService(),
-    httpsOptions,
+    httpsOptions: process.env.NODE_ENV === 'development' ? void 0 : httpsOptions,
   });
   app.useWebSocketAdapter(new WsAdapter(app));
   app

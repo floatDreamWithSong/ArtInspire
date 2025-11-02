@@ -14,6 +14,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { DiaryModule } from './modules/diary/diary.module';
 import { UserModule } from './modules/user/user.module';
 import { TtsModule } from './modules/tts/tts.module';
+import { VoiceModule } from './modules/voice/voice.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { TtsModule } from './modules/tts/tts.module';
     DiaryModule,
     UserModule,
     TtsModule,
+    VoiceModule,
   ],
   providers: [
     {
