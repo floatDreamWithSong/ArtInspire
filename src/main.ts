@@ -12,10 +12,16 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger';
 import { WsAdapter } from '@nestjs/platform-ws';
+import fs from 'fs'
 
 async function bootstrap() {
+  const httpsOptions = {
+    key: fs.readFileSync('ssl/cert250508fd767cc6898a4572_daydreamer.net.cn_OTHER.key'),
+    cert: fs.readFileSync('ssl/cert250508fd767cc6898a4572_daydreamer.net.cn_OTHER.crt'),
+  };
   const app = await NestFactory.create(AppModule, {
     logger: new LoggerService(),
+    httpsOptions,
   });
   app.useWebSocketAdapter(new WsAdapter(app));
   app
