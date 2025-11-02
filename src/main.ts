@@ -11,11 +11,13 @@ import { LoggerService } from './common/utils/logger/logger.service';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new LoggerService(),
   });
+  app.useWebSocketAdapter(new WsAdapter(app));
   app
     .useGlobalFilters(new ErrorFilter())
     .useGlobalFilters(new AppExceptionFilter())

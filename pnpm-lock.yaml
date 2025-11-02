@@ -165,9 +165,6 @@ importers:
       '@types/supertest':
         specifier: ^6.0.3
         version: 6.0.3
-      '@types/uuid':
-        specifier: ^11.0.0
-        version: 11.0.0
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
@@ -2498,10 +2495,6 @@ packages:
 
   '@types/tedious@4.0.14':
     resolution: {integrity: sha512-KHPsfX/FoVbUGbyYvk1q9MMQHLPeRZhRJZdO45Q4YjvFkv4hMNghCWTvy7rdKessBsmtz4euWCWAB6/tVpI1Iw==}
-
-  '@types/uuid@11.0.0':
-    resolution: {integrity: sha512-HVyk8nj2m+jcFRNazzqyVKiZezyhDKrGUA3jlEcg/nZ6Ms+qHwocba1Y/AaVaznJTAM9xpdFSh+ptbNrhOGvZA==}
-    deprecated: This is a stub types definition. uuid provides its own type definitions, so you do not need this installed.
 
   '@types/uuid@9.0.8':
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
@@ -9224,10 +9217,6 @@ snapshots:
   '@types/tedious@4.0.14':
     dependencies:
       '@types/node': 22.16.3
-
-  '@types/uuid@11.0.0':
-    dependencies:
-      uuid: 9.0.1
 
   '@types/uuid@9.0.8': {}
 

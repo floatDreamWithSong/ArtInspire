@@ -34,6 +34,7 @@ export class Configurations implements OnModuleInit {
   static TTS_ACCESS_TOKEN: string;
   static TTS_RESOURCE_ID: string;
   static TTS_ENDPOINT: string;
+  static TTS_MAX_CONNECTIONS: number;
 
   constructor(private readonly configService: ConfigService) {}
 
@@ -57,7 +58,7 @@ export class Configurations implements OnModuleInit {
     Configurations.TTS_ACCESS_TOKEN = this.configService.getOrThrow<string>('TTS_ACCESS_TOKEN');
     Configurations.TTS_RESOURCE_ID = this.configService.getOrThrow<string>('TTS_RESOURCE_ID');
     Configurations.TTS_ENDPOINT = this.configService.getOrThrow<string>('TTS_ENDPOINT');
-
+    Configurations.TTS_MAX_CONNECTIONS = this.configService.getOrThrow<number>('TTS_MAX_CONNECTIONS');
     console.log('Configurations.BUCKET', Configurations.COS_BUCKET);
     // 对于HTTP_TIMEOUT和HTTP_MAX_REDIRECTS这类有默认值的配置可以保持原样
   }

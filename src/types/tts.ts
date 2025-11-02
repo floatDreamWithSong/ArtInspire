@@ -1,21 +1,22 @@
 export interface OpenRequest {
   type: 'front-auth';
   token: string;
+  resourceId: string;
+  connectId: string;
 }
 export interface AuthResponse {
   type: 'backend-auth';
-  token: string;
 }
 export interface TtsRequest {
   type: 'front-tts';
   text: string;
   voice: string;
+  connectId: string;
 }
 export interface TtsResponse {
   type: 'backend-tts';
   order: number;
-  text: string;
-  audio: Buffer | string; // Buffer或base64字符串
+  audio: Buffer;
 }
 export interface TtsError {
   type: 'backend-error';
