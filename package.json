@@ -67,6 +67,7 @@
     "cos-nodejs-sdk-v5": "^2.15.1",
     "crypto": "^1.0.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
     "ioredis": "^5.6.1",
     "nodemailer": "^6.10.1",
     "passport": "^0.7.0",

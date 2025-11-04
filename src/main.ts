@@ -13,15 +13,21 @@ import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger';
 import { WsAdapter } from '@nestjs/platform-ws';
 import fs from 'fs'
-
+import dotenv from 'dotenv'
+dotenv.config();
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync('ssl/cert250508fd767cc6898a4572_daydreamer.net.cn_OTHER.key'),
-    cert: fs.readFileSync('ssl/cert250508fd767cc6898a4572_daydreamer.net.cn_OTHER.crt'),
-  };
+  let httpsOptions: { key: Buffer; cert: Buffer } | undefined;
+  if (process.env.NODE_ENV !== 'development' && process.env.SSL_KEY && process.env.SSL_CRT) {
+    console.log('SSL_KEY', process.env.SSL_KEY);
+    console.log('SSL_CRT', process.env.SSL_CRT);
+    httpsOptions = {
+      key: fs.readFileSync(process.env.SSL_KEY),
+      cert: fs.readFileSync(process.env.SSL_CRT),
+    };
+  }
   const app = await NestFactory.create(AppModule, {
     logger: new LoggerService(),
-    httpsOptions: process.env.NODE_ENV === 'development' ? void 0 : httpsOptions,
+    httpsOptions,
   });
   app.useWebSocketAdapter(new WsAdapter(app));
   app
