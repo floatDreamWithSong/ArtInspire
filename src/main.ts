@@ -12,22 +12,22 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger';
 import { WsAdapter } from '@nestjs/platform-ws';
-import fs from 'fs'
+// import fs from 'fs'
 import dotenv from 'dotenv'
 dotenv.config();
 async function bootstrap() {
-  let httpsOptions: { key: Buffer; cert: Buffer } | undefined;
-  if (process.env.NODE_ENV !== 'development' && process.env.SSL_KEY && process.env.SSL_CRT) {
-    console.log('SSL_KEY', process.env.SSL_KEY);
-    console.log('SSL_CRT', process.env.SSL_CRT);
-    httpsOptions = {
-      key: fs.readFileSync(process.env.SSL_KEY),
-      cert: fs.readFileSync(process.env.SSL_CRT),
-    };
-  }
+  // let httpsOptions: { key: Buffer; cert: Buffer } | undefined;
+  // if (process.env.NODE_ENV !== 'development' && process.env.SSL_KEY && process.env.SSL_CRT) {
+  //   console.log('SSL_KEY', process.env.SSL_KEY);
+  //   console.log('SSL_CRT', process.env.SSL_CRT);
+  //   httpsOptions = {
+  //     key: fs.readFileSync(process.env.SSL_KEY),
+  //     cert: fs.readFileSync(process.env.SSL_CRT),
+  //   };
+  // }
   const app = await NestFactory.create(AppModule, {
     logger: new LoggerService(),
-    httpsOptions,
+    // httpsOptions,
   });
   app.useWebSocketAdapter(new WsAdapter(app));
   app
